@@ -1,0 +1,90 @@
+// Helper Utilities
+// Utility classes and helpers
+
+// Screen reader only text
+.screen-reader-text {
+  @include visually-hidden;
+}
+
+// Loading states
+.is-loading {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--color-primary);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Mobile menu toggle (added by JS)
+.mobile-menu-toggle {
+  @include button-reset;
+  display: none;
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--color-primary);
+  color: white;
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  
+  &:hover {
+    background-color: var(--color-secondary);
+  }
+  
+  @include mobile {
+    display: block;
+  }
+}
+
+.docs-sidebar-left.menu-open {
+  .sidebar-pages-navigation {
+    display: block;
+  }
+}
+
+// Responsive utilities
+@include mobile {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@include tablet {
+  .hide-tablet {
+    display: none;
+  }
+}
+
+.show-mobile {
+  display: none;
+  
+  @include mobile {
+    display: block;
+  }
+}
+
+.show-tablet {
+  display: none;
+  
+  @include tablet {
+    display: block;
+  }
+}

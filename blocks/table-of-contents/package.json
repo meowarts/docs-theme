@@ -1,0 +1,17 @@
+{
+  "name": "docs-theme-toc-block",
+  "version": "1.0.0",
+  "description": "Table of Contents block for Docs Theme",
+  "author": "Meow Apps",
+  "license": "GPL-2.0-or-later",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^26.0.0"
+  }
+}

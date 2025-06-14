@@ -1,0 +1,41 @@
+/* Table of Contents Block Styles */
+.docs-toc {
+	position: sticky;
+	top: 2rem;
+}
+
+.docs-toc__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.docs-toc__list--nested {
+	padding-left: 1rem;
+	margin-top: 0.25rem;
+}
+
+.docs-toc__item {
+	margin-bottom: 0.25rem;
+}
+
+.docs-toc__link {
+	display: block;
+	padding: 0.25rem 0.5rem;
+	color: var(--wp--preset--color--muted);
+	text-decoration: none;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	border-left: 2px solid transparent;
+	transition: all 0.2s ease;
+}
+
+.docs-toc__link:hover {
+	color: var(--wp--preset--color--foreground);
+}
+
+.docs-toc__link.is-active {
+	color: var(--wp--preset--color--accent);
+	border-left-color: var(--wp--preset--color--accent);
+	background-color: rgba(56, 189, 248, 0.1);
+}

@@ -1,0 +1,32 @@
+// Copy Button Component
+// Code block copy to clipboard button
+
+pre {
+  position: relative;
+}
+
+.copy-code-button {
+  @include button-reset;
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  padding: var(--spacing-xs) calc(var(--spacing-sm) * 0.75);
+  background-color: var(--color-hover);
+  color: var(--color-foreground);
+  border-radius: 0.25rem;
+  font-size: var(--font-size-xs);
+  opacity: 0;
+  transition: opacity $transition-fast, background-color $transition-fast;
+  
+  &:hover {
+    background-color: var(--color-primary);
+  }
+  
+  &.copied {
+    background-color: #10b981;
+  }
+}
+
+pre:hover .copy-code-button {
+  opacity: 1;
+}

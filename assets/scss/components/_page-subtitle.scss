@@ -1,0 +1,16 @@
+// Page Subtitle Component
+// Subtitle displayed below page titles
+
+.page-subtitle {
+  margin-top: calc(var(--spacing-xs) * 0.5);
+  margin-bottom: 0;
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: var(--line-height-tight);
+}
+
+// Adjust spacing between header and content when subtitle is present
+.entry-header {
+  margin-bottom: var(--spacing-2xl);
+}

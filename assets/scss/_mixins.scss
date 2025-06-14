@@ -1,0 +1,107 @@
+// Mixins
+// Reusable styles and patterns
+
+// Typography mixins
+@mixin heading-base {
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  color: var(--color-foreground);
+  margin-top: 0;
+}
+
+@mixin section-title {
+  margin: 0 0 var(--spacing-md) 0;
+  font-family: var(--font-family-titles);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  line-height: var(--line-height-tight);
+}
+
+// Layout mixins
+@mixin container {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@mixin sticky-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hover) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-hover);
+    border-radius: 3px;
+  }
+}
+
+// Content alignment - ensures sidebars align with main content
+@mixin aligned-column-padding {
+  padding-top: var(--content-padding-vertical);
+  padding-bottom: var(--content-padding-vertical);
+}
+
+// Component mixins
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+@mixin link-hover {
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+// Media query mixins
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$breakpoint-tablet}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-desktop}) {
+    @content;
+  }
+}
+
+// Utility mixins
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

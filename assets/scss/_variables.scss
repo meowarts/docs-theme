@@ -1,0 +1,76 @@
+// Variables
+// Define all theme variables here
+
+// Colors
+:root {
+  // Base colors
+  --color-background: #0f172a;
+  --color-foreground: rgb(229, 231, 235);
+  --color-muted: #94a3b8;
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: rgba(78, 185, 236, 1);
+  --color-accent-bg: rgba(78, 185, 236, 0.1);
+  --color-hover: #334155;
+  --color-code-bg: #1e293b;
+  --color-widget-bg: #1e293b;
+  --color-border: #e5e7eb;
+  --color-bold-accent: #92a2ff;
+  
+  // Spacing
+  --spacing-unit: 1rem;
+  --spacing-xs: calc(var(--spacing-unit) * 0.25);
+  --spacing-sm: calc(var(--spacing-unit) * 0.5);
+  --spacing-md: var(--spacing-unit);
+  --spacing-lg: calc(var(--spacing-unit) * 1.5);
+  --spacing-xl: calc(var(--spacing-unit) * 2);
+  --spacing-2xl: calc(var(--spacing-unit) * 3);
+  --spacing-3xl: calc(var(--spacing-unit) * 4);
+  
+  // Typography
+  --font-family-body: -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-sidebar: -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-titles: ui-sans-serif, system-ui, -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  
+  // Font sizes
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.0625rem;
+  --font-size-xl: 1.125rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  
+  // Line heights
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+  --line-height-loose: 1.75;
+  
+  // Layout
+  --layout-max-width: 1400px;
+  --layout-content-width: 760px;
+  --layout-sidebar-width: 280px;
+  
+  // Alignment helpers
+  --content-padding-vertical: var(--spacing-2xl);
+  --content-padding-horizontal: var(--spacing-3xl);
+  --sidebar-padding-vertical: var(--spacing-2xl);
+  --sidebar-padding-horizontal: var(--spacing-xl);
+  
+  // Z-index layers
+  --z-index-sticky: 10;
+  --z-index-dropdown: 100;
+  --z-index-modal: 1000;
+}
+
+// Sass variables for internal use
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1400px;
+
+// Transition defaults
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;

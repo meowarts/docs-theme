@@ -1,0 +1,102 @@
+/**
+ * Navigation specific styles
+ */
+
+/* Submenu toggle button */
+.submenu-toggle {
+	position: absolute;
+	right: 0.5rem;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 0.25rem;
+	background: transparent;
+	border: none;
+	color: var(--wp--preset--color--muted);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.submenu-toggle:hover {
+	color: var(--wp--preset--color--foreground);
+}
+
+.submenu-toggle svg {
+	transition: transform 0.2s ease;
+}
+
+/* Adjust navigation item positioning for toggle */
+.docs-sidebar-left .wp-block-navigation-item.has-child {
+	position: relative;
+}
+
+.docs-sidebar-left .wp-block-navigation-item.has-child > .wp-block-navigation-link {
+	padding-right: 2rem;
+}
+
+/* Smooth transitions for submenus */
+.docs-sidebar-left .wp-block-navigation__submenu-container {
+	transition: all 0.3s ease;
+	overflow: hidden;
+}
+
+/* Loading states */
+.is-loading {
+	position: relative;
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.is-loading::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 20px;
+	height: 20px;
+	margin: -10px 0 0 -10px;
+	border: 2px solid var(--wp--preset--color--primary);
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Mobile menu toggle */
+@media (max-width: 768px) {
+	.docs-sidebar-left {
+		position: relative;
+	}
+	
+	.mobile-menu-toggle {
+		display: block;
+		width: 100%;
+		padding: 1rem;
+		background-color: var(--wp--preset--color--primary);
+		color: white;
+		border: none;
+		text-align: left;
+		cursor: pointer;
+		font-size: 1rem;
+		font-weight: 500;
+	}
+	
+	.mobile-menu-toggle:hover {
+		background-color: var(--wp--preset--color--secondary);
+	}
+	
+	.docs-sidebar-left .wp-block-navigation {
+		display: none;
+	}
+	
+	.docs-sidebar-left.menu-open .wp-block-navigation {
+		display: block;
+	}
+}

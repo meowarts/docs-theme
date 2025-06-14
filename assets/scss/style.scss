@@ -1,0 +1,25 @@
+/**
+ * Docs Theme Main Stylesheet
+ * 
+ * This file imports all the partial Sass files and compiles
+ * them into the final CSS file.
+ */
+
+// Variables and mixins (order matters)
+@import 'variables';
+@import 'mixins';
+
+// Base styles
+@import 'base';
+@import 'layout';
+
+// Components
+@import 'components/header';
+@import 'components/sidebar-navigation';
+@import 'components/table-of-contents';
+@import 'components/content';
+@import 'components/copy-button';
+@import 'components/page-subtitle';
+
+// Utilities
+@import 'utilities/helpers';

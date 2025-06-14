@@ -1,0 +1,33 @@
+.docs-toc-placeholder {
+	padding: 1.5rem;
+	background-color: #f3f4f6;
+	border: 1px dashed #d1d5db;
+	border-radius: 0.375rem;
+	text-align: center;
+
+	h4 {
+		margin: 0 0 0.5rem;
+		font-size: 1.125rem;
+		font-weight: 600;
+	}
+
+	p {
+		margin: 0 0 1rem;
+		color: #6b7280;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			display: inline-block;
+			margin: 0 0.5rem;
+			padding: 0.25rem 0.75rem;
+			background-color: #e5e7eb;
+			border-radius: 0.25rem;
+			font-size: 0.875rem;
+		}
+	}
+}

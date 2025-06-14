@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "docs-theme/table-of-contents",
+	"version": "1.0.0",
+	"title": "Table of Contents",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Display a table of contents for the current page.",
+	"keywords": ["toc", "navigation", "contents", "outline"],
+	"supports": {
+		"html": false,
+		"align": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"color": {
+			"text": true,
+			"background": true,
+			"link": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"attributes": {
+		"showH2": {
+			"type": "boolean",
+			"default": true
+		},
+		"showH3": {
+			"type": "boolean",
+			"default": true
+		},
+		"showH4": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"textdomain": "docs-theme",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"viewScript": "file:./build/view.js",
+	"style": "file:./build/style-index.css",
+	"render": "file:./render.php"
+}

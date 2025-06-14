@@ -1,0 +1,112 @@
+// Sidebar Navigation Component
+// Automatic page hierarchy navigation
+
+.sidebar-pages-navigation {
+  text-align: left;
+  padding: var(--content-padding-vertical) var(--sidebar-padding-horizontal);
+  font-family: var(--font-family-sidebar);
+  position: sticky;
+  top: var(--spacing-xl);
+}
+
+.page-category-section {
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.1);
+  
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  // Ensure first category aligns with main content title
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.category-title {
+  @include section-title;
+}
+
+.pages-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0;
+  
+  &.has-children {
+    > .page-item-wrapper {
+      position: relative;
+    }
+  }
+}
+
+.page-item-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .current-page > & {
+    background-color: var(--color-accent-bg);
+    margin: 0 calc(var(--spacing-sm) * -1);
+    padding: 0 var(--spacing-sm);
+    border-radius: 0.25rem;
+  }
+}
+
+.page-link {
+  flex: 1;
+  display: block;
+  padding: var(--spacing-sm) 0;
+  color: var(--color-foreground);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: var(--color-primary);
+  }
+  
+  .current-page > .page-item-wrapper > & {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+}
+
+.toggle-children {
+  @include button-reset;
+  padding: var(--spacing-sm);
+  color: var(--color-muted);
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: var(--color-foreground);
+  }
+  
+  svg {
+    display: block;
+    width: 12px;
+    height: 12px;
+    transition: transform $transition-fast;
+  }
+  
+  &[aria-expanded="true"] svg {
+    transform: rotate(90deg);
+  }
+}
+
+// Nested pages
+.page-item .children {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--spacing-md);
+  
+  .page-link {
+    font-size: calc(var(--font-size-base) * 0.9375);
+  }
+}
