@@ -22,7 +22,7 @@ function docs_theme_order_categories_in_admin($query) {
 // Force the default sorting in the categories admin screen
 add_filter('get_terms_defaults', 'docs_theme_set_category_default_order', 10, 2);
 function docs_theme_set_category_default_order($defaults, $taxonomies) {
-    if (is_admin() && in_array('page_category', $taxonomies)) {
+    if (is_admin() && is_array($taxonomies) && in_array('page_category', $taxonomies)) {
         $screen = get_current_screen();
         if ($screen && $screen->base == 'edit-tags' && !isset($_GET['orderby'])) {
             $defaults['meta_key'] = 'docs_theme_order';

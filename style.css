@@ -38,10 +38,10 @@ Use it to make something cool, have fun, and share what you've learned with othe
   --spacing-xl: calc(var(--spacing-unit) * 2);
   --spacing-2xl: calc(var(--spacing-unit) * 3);
   --spacing-3xl: calc(var(--spacing-unit) * 4);
-  --font-family-body: -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-family-sidebar: -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-family-titles: ui-sans-serif, system-ui, -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-family-body: "Inter", -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-sidebar: "Inter", -apple-system, "system-ui", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-titles: "Inter", ui-sans-serif, system-ui, -apple-system, "system-ui", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -387,28 +387,7 @@ body.admin-bar .docs-sidebar-right {
   align-items: center;
 }
 
-.search-field {
-  width: 100%;
-  padding: calc(var(--spacing-md) * 0.75) var(--spacing-2xl) calc(var(--spacing-md) * 0.75) var(--spacing-md);
-  background-color: var(--color-widget-bg);
-  border: 1px solid var(--color-border-ui);
-  border-radius: 0.375rem;
-  color: var(--color-foreground);
-  font-family: inherit;
-  font-size: var(--font-size-base);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.search-field:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-}
-.search-field::placeholder {
-  color: var(--color-muted);
-  opacity: 0.7;
-}
-
-.search-submit {
+.search-trigger {
   background: none;
   border: none;
   padding: 0;
@@ -416,19 +395,60 @@ body.admin-bar .docs-sidebar-right {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-  position: absolute;
-  right: var(--spacing-sm);
-  padding: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: calc(var(--spacing-md) * 0.75) var(--spacing-md);
+  background-color: var(--color-widget-bg);
+  border: 1px solid var(--color-border-ui);
+  border-radius: 0.375rem;
   color: var(--color-muted);
-  transition: color 0.2s ease;
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
-.search-submit:hover {
+.search-trigger:hover {
+  background-color: var(--color-hover);
+  border-color: var(--color-accent);
   color: var(--color-foreground);
 }
-.search-submit svg {
-  display: block;
+.search-trigger:hover svg {
+  color: var(--color-accent);
+}
+.search-trigger svg {
+  flex-shrink: 0;
   width: 20px;
   height: 20px;
+  transition: color 0.2s ease;
+}
+.search-trigger .search-trigger-text {
+  flex: 1;
+  text-align: left;
+}
+.search-trigger .search-trigger-shortcut {
+  flex-shrink: 0;
+  padding: 2px 6px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border-ui);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-family-mono);
+  color: var(--color-foreground);
+}
+@media (max-width: 768px) {
+  .search-trigger {
+    padding: var(--spacing-sm);
+    width: auto;
+  }
+  .search-trigger .search-trigger-text {
+    display: none;
+  }
+  .search-trigger .search-trigger-shortcut {
+    display: none;
+  }
 }
 
 .page-category-section {
@@ -915,7 +935,7 @@ pre:hover .copy-code-button {
 .page-subtitle {
   margin-top: calc(var(--spacing-xs) * 0.5);
   margin-bottom: 0;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: 400;
   color: var(--color-muted);
   line-height: var(--line-height-tight);

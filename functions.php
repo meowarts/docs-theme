@@ -60,10 +60,10 @@ function enqueue_scripts() {
 		DOCS_THEME_VERSION
 	);
 	
-	// Enqueue Inter font.
+	// Enqueue Inter and JetBrains Mono fonts.
 	wp_enqueue_style(
 		'docs-theme-fonts',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap',
 		array(),
 		null
 	);
@@ -76,6 +76,27 @@ function enqueue_scripts() {
 		DOCS_THEME_VERSION,
 		true
 	);
+	
+	// Enqueue search script
+	wp_enqueue_script(
+		'docs-theme-search',
+		DOCS_THEME_URI . '/assets/js/search.js',
+		array('docs-theme-script'),
+		DOCS_THEME_VERSION,
+		true
+	);
+	
+	// Localize script with REST API URL
+	wp_localize_script( 'docs-theme-script', 'docsTheme', array(
+		'restUrl' => esc_url_raw( rest_url() ),
+		'nonce' => wp_create_nonce( 'wp_rest' ),
+	) );
+	
+	// Also localize for search script
+	wp_localize_script( 'docs-theme-search', 'docsTheme', array(
+		'restUrl' => esc_url_raw( rest_url() ),
+		'nonce' => wp_create_nonce( 'wp_rest' ),
+	) );
 	
 	// Highlight.js for syntax highlighting
 	wp_enqueue_style(
@@ -168,6 +189,25 @@ function register_blocks() {
 	register_block_type( DOCS_THEME_DIR . '/blocks/table-of-contents' );
 }
 add_action( 'init', __NAMESPACE__ . '\\register_blocks' );
+
+/**
+ * Add page categories to REST API response
+ */
+function add_categories_to_pages_api() {
+	register_rest_field( 'page', 'page_categories', array(
+		'get_callback' => function( $post ) {
+			$terms = wp_get_post_terms( $post['id'], 'page_category' );
+			return wp_list_pluck( $terms, 'name' );
+		},
+		'schema' => array(
+			'type' => 'array',
+			'items' => array(
+				'type' => 'string',
+			),
+		),
+	) );
+}
+add_action( 'rest_api_init', __NAMESPACE__ . '\\add_categories_to_pages_api' );
 
 /**
  * Filter to add custom classes to navigation blocks.

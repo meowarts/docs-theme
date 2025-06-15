@@ -8,7 +8,6 @@
 	// Initialize when DOM is ready
 	document.addEventListener('DOMContentLoaded', function() {
 		initCopyCodeButtons();
-		initSearchShortcut();
 		initSmoothAnchors();
 		initCollapsibleMenus();
 		initHighlightJS();
@@ -68,27 +67,6 @@
 		});
 	}
 
-	/**
-	 * Add keyboard shortcut for search (Cmd/Ctrl + K)
-	 */
-	function initSearchShortcut() {
-		const searchInput = document.querySelector('.wp-block-search__input');
-		if (!searchInput) return;
-		
-		document.addEventListener('keydown', function(e) {
-			// Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
-			if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-				e.preventDefault();
-				searchInput.focus();
-				searchInput.select();
-			}
-			
-			// Allow Escape to blur the search input
-			if (e.key === 'Escape' && document.activeElement === searchInput) {
-				searchInput.blur();
-			}
-		});
-	}
 
 	/**
 	 * Smooth scrolling for anchor links
