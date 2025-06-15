@@ -9,6 +9,7 @@
     const { TextareaControl } = wp.components;
     const { useSelect, useDispatch } = wp.data;
     const { useEntityProp } = wp.coreData;
+    const { createElement } = wp.element;
 
     const PageSubtitlePanel = () => {
         // Only show on pages
@@ -29,20 +30,23 @@
             setMeta( { ...meta, _docs_theme_subtitle: value } );
         };
 
-        return (
-            <PluginDocumentSettingPanel
-                name="page-subtitle-panel"
-                title={ __( 'Page Subtitle', 'docs-theme' ) }
-                className="docs-theme-page-subtitle-panel"
-            >
-                <TextareaControl
-                    label={ __( 'Subtitle', 'docs-theme' ) }
-                    value={ subtitle }
-                    onChange={ updateSubtitle }
-                    help={ __( 'Appears below the page title', 'docs-theme' ) }
-                    rows={ 4 }
-                />
-            </PluginDocumentSettingPanel>
+        return createElement(
+            PluginDocumentSettingPanel,
+            {
+                name: 'page-subtitle-panel',
+                title: __( 'Page Subtitle', 'docs-theme' ),
+                className: 'docs-theme-page-subtitle-panel'
+            },
+            createElement(
+                TextareaControl,
+                {
+                    label: __( 'Subtitle', 'docs-theme' ),
+                    value: subtitle,
+                    onChange: updateSubtitle,
+                    help: __( 'Appears below the page title', 'docs-theme' ),
+                    rows: 4
+                }
+            )
         );
     };
 
