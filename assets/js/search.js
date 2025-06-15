@@ -137,7 +137,7 @@
     async function performSearch(query) {
         try {
             // Search pages
-            const response = await fetch(`${window.docsTheme.restUrl}wp/v2/pages?search=${encodeURIComponent(query)}&per_page=10&_fields=id,title,excerpt,link,parent,page_categories`);
+            const response = await fetch(`${window.docsTheme.restUrl}wp/v2/pages?search=${encodeURIComponent(query)}&per_page=10&_fields=id,title,excerpt,link,parent,page_categories,emoticon`);
             
             if (!response.ok) {
                 throw new Error('Search failed');
@@ -194,11 +194,14 @@
                 breadcrumb += `<span class="docs-search-breadcrumb">${parentTitles[page.parent]}</span>`;
             }
 
+            // Add emoticon if available
+            const emoticon = page.emoticon ? `<span class="docs-search-result-emoticon">${escapeHtml(page.emoticon)}</span> ` : '';
+
             return `
                 <a href="${page.link}" class="docs-search-result" data-index="${index}">
                     <div class="docs-search-result-content">
                         ${breadcrumb ? `<div class="docs-search-breadcrumbs">${breadcrumb}</div>` : ''}
-                        <h4 class="docs-search-result-title">${title}</h4>
+                        <h4 class="docs-search-result-title">${emoticon}${title}</h4>
                         <p class="docs-search-result-excerpt">${excerpt}</p>
                     </div>
                     <svg class="docs-search-result-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">

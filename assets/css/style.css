@@ -806,6 +806,87 @@ body.admin-bar .docs-sidebar-right {
   color: var(--color-muted);
 }
 
+.docs-child-pages {
+  margin-top: var(--spacing-lg);
+}
+.docs-child-pages .docs-page-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+.docs-child-pages .docs-page-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  background-color: var(--color-widget-bg);
+  border: 1px solid var(--color-border-ui);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.docs-child-pages .docs-page-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-background);
+}
+.docs-child-pages .docs-page-card:hover .docs-page-card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+.docs-child-pages .docs-page-card .docs-page-card-content {
+  flex: 1;
+}
+.docs-child-pages .docs-page-card .docs-page-card-title {
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  color: var(--color-foreground);
+  margin-top: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0 0 var(--spacing-xs) 0;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+.docs-child-pages .docs-page-card .docs-page-card-emoticon {
+  font-size: var(--font-size-xl);
+  line-height: 1;
+}
+.docs-child-pages .docs-page-card .docs-page-card-excerpt {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: var(--line-height-normal);
+}
+.docs-child-pages .docs-page-card .docs-page-card-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}
+.docs-child-pages .docs-page-card .docs-page-card-arrow {
+  margin-left: var(--spacing-md);
+  color: var(--color-secondary);
+  flex-shrink: 0;
+  opacity: 0.5;
+  transform: translateX(-4px);
+  transition: all 0.2s ease;
+}
+
+.page-emoticon {
+  display: inline-block;
+  font-size: 1.2em;
+  margin-right: var(--spacing-xs);
+  vertical-align: middle;
+}
+
+.docs-search-result-emoticon {
+  display: inline-block;
+  font-size: 1.1em;
+  margin-right: var(--spacing-xs);
+  vertical-align: middle;
+}
+
 pre {
   position: relative;
 }

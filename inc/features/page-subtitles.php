@@ -87,7 +87,7 @@ function docs_theme_enqueue_subtitle_block_editor_assets() {
     if ($screen && $screen->post_type === 'page') {
         wp_enqueue_script(
             'docs-theme-page-subtitle-editor',
-            get_template_directory_uri() . '/assets/js/page-subtitle-block-editor.js',
+            get_template_directory_uri() . '/assets/js/page-meta-block-editor.js',
             array(
                 'wp-plugins',
                 'wp-edit-post',

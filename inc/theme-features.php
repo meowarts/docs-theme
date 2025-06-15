@@ -15,3 +15,5 @@ require_once get_template_directory() . '/inc/features/hide-author-columns.php';
 require_once get_template_directory() . '/inc/features/seo-enhancements.php';
 require_once get_template_directory() . '/inc/features/font-options.php';
 require_once get_template_directory() . '/inc/features/block-styles.php';
+require_once get_template_directory() . '/inc/features/page-excerpts.php';
+require_once get_template_directory() . '/inc/features/page-emoticons.php';
