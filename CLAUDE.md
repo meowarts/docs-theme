@@ -189,6 +189,97 @@ This is a classic theme without FSE:
 - No external libraries
 - Fast page loads
 
+## Build Process & Deployment
+
+### Local Development
+The theme uses Sass for CSS development:
+```bash
+# Install dependencies
+npm install
+
+# Build CSS once
+npm run build
+
+# Watch for changes during development
+npm run watch
+```
+
+### Version Management
+**IMPORTANT**: Always bump the version before pushing changes!
+
+```bash
+# For bug fixes (1.0.0 -> 1.0.1)
+npm run version:patch
+
+# For new features (1.0.0 -> 1.1.0)  
+npm run version:minor
+
+# For breaking changes (1.0.0 -> 2.0.0)
+npm run version:major
+```
+
+This updates the version in both `style.css` and `package.json`.
+
+### Automatic Deployment
+The theme is automatically deployed to WordPress via FTP on every push to the main branch using GitHub Actions.
+
+**Workflow**:
+1. Make your changes locally
+2. Bump the version: `npm run version:patch`
+3. Commit all changes: `git add . && git commit -m "Your message"`
+4. Push to GitHub: `git push`
+5. GitHub Actions automatically builds and deploys to WordPress
+
+**Deployment Setup** (one-time):
+1. Go to GitHub repository settings
+2. Navigate to Settings > Secrets and variables > Actions
+3. Add these secrets:
+   - `FTP_SERVER`: Your FTP server address
+   - `FTP_USERNAME`: Your FTP username
+   - `FTP_PASSWORD`: Your FTP password
+   - `FTP_PORT`: Your FTP port (for non-standard ports)
+
+**What Gets Deployed**:
+- All theme files except:
+  - `.git` and `.github` folders
+  - `node_modules`
+  - SCSS source files (`assets/scss/`)
+  - Development files (package.json, etc.)
+  - Documentation files (.md files)
+
+### SCSS Structure
+```
+assets/scss/
+├── style.scss          # Main file that imports all others
+├── _variables.scss     # CSS variables and Sass variables
+├── _mixins.scss        # Reusable mixins
+├── _base.scss          # Global element styles
+├── _layout.scss        # Layout and structure
+└── components/         # Component-specific styles
+    ├── _header.scss
+    ├── _sidebar.scss
+    ├── _table-of-contents.scss
+    ├── _content.scss
+    ├── _code.scss
+    └── _utilities.scss
+```
+
+### Making Style Changes
+1. Edit SCSS files in `assets/scss/`
+2. Run `npm run build` to compile
+3. Test your changes locally
+4. Bump version and push to deploy
+
+### Feature Modules
+The theme includes modular features in `inc/features/`:
+- `admin-menu-order.php` - Reorders admin menu items
+- `block-styles.php` - Registers block editor styles
+- `font-options.php` - Adds font selection to Customizer
+- `hide-author-columns.php` - Hides author column in admin
+- `seo-enhancements.php` - Basic SEO improvements
+
+All features are loaded automatically via `functions.php`.
+
 ## Troubleshooting
 
 ### Pages Not Showing in Sidebar

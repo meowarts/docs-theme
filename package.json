@@ -1,6 +1,6 @@
 {
   "name": "docs-theme",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A simple WordPress documentation theme",
   "author": "Meow Apps",
   "license": "GPL-2.0-or-later",
@@ -8,7 +8,10 @@
     "build:css": "sass assets/scss/style.scss:assets/css/style.css --style=expanded",
     "build:css:min": "sass assets/scss/style.scss:assets/css/style.min.css --style=compressed",
     "watch:css": "sass assets/scss/style.scss:assets/css/style.css --style=expanded --watch",
-    "build": "npm run build:css && npm run build:css:min"
+    "build": "npm run build:css && npm run build:css:min",
+    "version:patch": "node bump-version.js patch",
+    "version:minor": "node bump-version.js minor",
+    "version:major": "node bump-version.js major"
   },
   "devDependencies": {
     "sass": "^1.69.5"
