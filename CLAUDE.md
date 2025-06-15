@@ -6,8 +6,8 @@ Docs Theme is a straightforward, classic WordPress theme designed specifically f
 
 **Author**: Meow Apps  
 **Website**: https://meowapps.com  
-**Version**: 1.0.0  
-**Requires**: WordPress 5.0+, PHP 7.4+
+**Version**: 1.2.2  
+**Requires**: WordPress 6.0+, PHP 7.4+
 
 ## Key Features
 
@@ -231,10 +231,11 @@ The theme uses a unified deployment script (`deploy.js`) that handles both versi
 
 **Technical Details**:
 - The `deploy.js` script combines version bumping and deployment
-- Updates both `style.css` and `package.json` version numbers
+- Updates version in `style.css`, `assets/scss/theme-header.scss`, and `package.json`
 - Uses `sshpass` for SFTP authentication
 - Excludes development files from deployment (node_modules, SCSS, etc.)
 - Creates temporary `deploy/` directory that gets cleaned up after upload
+- Automatically rebuilds CSS after version bump via `npm run build`
 
 ### SCSS Structure
 ```

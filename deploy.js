@@ -81,6 +81,17 @@ function bumpVersion(versionType = 'patch') {
     );
     fs.writeFileSync(stylePath, updatedStyle);
 
+    // Update assets/scss/theme-header.scss
+    const themeHeaderPath = path.join(__dirname, 'assets/scss/theme-header.scss');
+    if (fs.existsSync(themeHeaderPath)) {
+        const themeHeaderContent = fs.readFileSync(themeHeaderPath, 'utf8');
+        const updatedThemeHeader = themeHeaderContent.replace(
+            /Version:\s*\d+\.\d+\.\d+/,
+            `Version: ${newVersion}`
+        );
+        fs.writeFileSync(themeHeaderPath, updatedThemeHeader);
+    }
+
     // Update package.json
     const packagePath = path.join(__dirname, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));

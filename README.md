@@ -7,9 +7,10 @@ A modern, documentation-first WordPress theme with automatic navigation generati
 - 📚 **Auto Navigation** - Sidebar automatically lists all pages by category
 - 📑 **Auto Table of Contents** - Generates TOC from page headings
 - 🗂️ **Page Categories** - Organize pages into sections  
-- 🌙 **Dark Theme** - Professional dark design for documentation
+- 🌙 **Dark Theme** - Professional dark design with subtle CRT effect
 - 💻 **Code Friendly** - Syntax highlighting and copy buttons
 - 📱 **Responsive** - Works on all devices
+- ✨ **CRT Effect** - Subtle scanlines for retro aesthetic
 
 ## Development & Deployment
 
@@ -62,6 +63,14 @@ npm run version:major
 3. Deploy with version bump: `npm run deploy:patch`
 4. Commit to git: `git add . && git commit -m "Deploy version X.X.X"`
 5. Push: `git push`
+
+### Technical Notes
+- The deploy script automatically updates version in:
+  - `style.css` (WordPress theme header)
+  - `assets/scss/theme-header.scss` (source file)
+  - `package.json` (npm package version)
+- CSS is automatically rebuilt after version bumping
+- Development files (SCSS, node_modules, etc.) are excluded from deployment
 
 ## License
 
