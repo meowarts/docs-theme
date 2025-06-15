@@ -36,14 +36,20 @@ jobs:
     - name: Test SFTP connection
       run: |
         echo "Testing SFTP connection..."
-        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }} <<< "pwd; ls; bye"
+        cat > test_batch << EOF
+        pwd
+        ls
+        bye
+        EOF
+        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} -b test_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
 
     - name: Deploy via SFTP
       run: |
         # Create a batch file for SFTP commands
         cat > sftp_batch << EOF
-        mkdir /wp-content/themes
-        mkdir /wp-content/themes/docs-theme
+        -mkdir /wp-content
+        -mkdir /wp-content/themes
+        -mkdir /wp-content/themes/docs-theme
         cd /wp-content/themes/docs-theme
         put -r deploy/* .
         bye
