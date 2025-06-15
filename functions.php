@@ -9,7 +9,8 @@
 namespace DocsTheme;
 
 // Theme constants.
-define( 'DOCS_THEME_VERSION', '1.0.0' );
+$theme = wp_get_theme();
+define( 'DOCS_THEME_VERSION', $theme->get( 'Version' ) );
 define( 'DOCS_THEME_DIR', get_template_directory() );
 define( 'DOCS_THEME_URI', get_template_directory_uri() );
 
