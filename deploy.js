@@ -42,14 +42,19 @@ function showHelp() {
 function bumpVersion(versionType = 'patch') {
     log(`📈 Bumping ${versionType} version...`, 'yellow');
     
-    // Read style.css
-    const stylePath = path.join(__dirname, 'style.css');
-    const styleContent = fs.readFileSync(stylePath, 'utf8');
+    // Read from theme-header.scss as the source of truth
+    const themeHeaderPath = path.join(__dirname, 'assets/scss/theme-header.scss');
+    if (!fs.existsSync(themeHeaderPath)) {
+        log('❌ Could not find assets/scss/theme-header.scss', 'red');
+        process.exit(1);
+    }
+    
+    const themeHeaderContent = fs.readFileSync(themeHeaderPath, 'utf8');
 
     // Extract current version
-    const versionMatch = styleContent.match(/Version:\s*(\d+)\.(\d+)\.(\d+)/);
+    const versionMatch = themeHeaderContent.match(/Version:\s*(\d+)\.(\d+)\.(\d+)/);
     if (!versionMatch) {
-        log('❌ Could not find version in style.css', 'red');
+        log('❌ Could not find version in theme-header.scss', 'red');
         process.exit(1);
     }
 
@@ -74,23 +79,14 @@ function bumpVersion(versionType = 'patch') {
 
     const newVersion = `${major}.${minor}.${patch}`;
 
-    // Update style.css
-    const updatedStyle = styleContent.replace(
+    // Update assets/scss/theme-header.scss (the source of truth)
+    const updatedThemeHeader = themeHeaderContent.replace(
         /Version:\s*\d+\.\d+\.\d+/,
         `Version: ${newVersion}`
     );
-    fs.writeFileSync(stylePath, updatedStyle);
-
-    // Update assets/scss/theme-header.scss
-    const themeHeaderPath = path.join(__dirname, 'assets/scss/theme-header.scss');
-    if (fs.existsSync(themeHeaderPath)) {
-        const themeHeaderContent = fs.readFileSync(themeHeaderPath, 'utf8');
-        const updatedThemeHeader = themeHeaderContent.replace(
-            /Version:\s*\d+\.\d+\.\d+/,
-            `Version: ${newVersion}`
-        );
-        fs.writeFileSync(themeHeaderPath, updatedThemeHeader);
-    }
+    fs.writeFileSync(themeHeaderPath, updatedThemeHeader);
+    
+    // style.css will be updated when we rebuild
 
     // Update package.json
     const packagePath = path.join(__dirname, 'package.json');
