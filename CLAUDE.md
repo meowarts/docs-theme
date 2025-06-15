@@ -236,8 +236,10 @@ The theme is automatically deployed to WordPress via SFTP on every push to the m
 3. Add these secrets:
    - `FTP_SERVER`: Your SFTP server address
    - `FTP_USERNAME`: Your SFTP username
-   - `FTP_PASSWORD`: Your SFTP password
    - `FTP_PORT`: Your SFTP port (for non-standard ports)
+   - `SSH_PRIVATE_KEY`: Your SSH private key for authentication
+
+**Note**: The deployment uses SSH key authentication. You'll need to generate an SSH key pair and add the public key to your server. See DEPLOYMENT.md for detailed setup instructions.
 
 **What Gets Deployed**:
 - All theme files except:

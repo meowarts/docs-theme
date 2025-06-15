@@ -30,8 +30,12 @@ jobs:
         # Copy everything except excluded files
         rsync -av --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='assets/scss' --exclude='package*.json' --exclude='*.md' --exclude='.gitignore' --exclude='.editorconfig' --exclude='bump-version.js' --exclude='deploy' ./ deploy/
 
-    - name: Install sshpass
-      run: sudo apt-get update && sudo apt-get install -y sshpass
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_SERVER }} >> ~/.ssh/known_hosts
 
     - name: Test SFTP connection
       run: |
@@ -41,7 +45,7 @@ jobs:
         ls
         bye
         EOF
-        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} -b test_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
+        sftp -P ${{ secrets.FTP_PORT }} -b test_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
 
     - name: Deploy via SFTP
       run: |
@@ -55,5 +59,5 @@ jobs:
         bye
         EOF
         
-        # Execute SFTP with sshpass
-        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} -b sftp_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
+        # Execute SFTP
+        sftp -P ${{ secrets.FTP_PORT }} -b sftp_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}

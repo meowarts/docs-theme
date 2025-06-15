@@ -11,10 +11,30 @@ This theme is automatically deployed to WordPress via SFTP on every push to the 
 3. Add the following secrets:
    - `FTP_SERVER`: Your SFTP server address (e.g., 35.240.176.35)
    - `FTP_USERNAME`: Your SFTP username
-   - `FTP_PASSWORD`: Your SFTP password
    - `FTP_PORT`: Your SFTP port (e.g., 61352)
+   - `SSH_PRIVATE_KEY`: Your SSH private key for authentication
 
-Note: The deployment uses SFTP (SSH File Transfer Protocol) for secure transfers.
+### SSH Key Setup
+
+1. Generate an SSH key pair locally:
+   ```bash
+   ssh-keygen -t rsa -b 4096 -f ~/.ssh/deploy_key
+   ```
+
+2. Add the public key to your server:
+   ```bash
+   ssh-copy-id -i ~/.ssh/deploy_key.pub -p 61352 github@35.240.176.35
+   ```
+   Or manually append the public key to `~/.ssh/authorized_keys` on your server.
+
+3. Copy the private key content:
+   ```bash
+   cat ~/.ssh/deploy_key
+   ```
+
+4. Add the entire private key (including `-----BEGIN/END-----` lines) as the `SSH_PRIVATE_KEY` secret in GitHub.
+
+Note: The deployment uses SFTP (SSH File Transfer Protocol) with SSH key authentication for secure transfers.
 
 ### Version Management
 
