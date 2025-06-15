@@ -33,6 +33,11 @@ jobs:
     - name: Install sshpass
       run: sudo apt-get update && sudo apt-get install -y sshpass
 
+    - name: Test SFTP connection
+      run: |
+        echo "Testing SFTP connection..."
+        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }} <<< "pwd; ls; bye"
+
     - name: Deploy via SFTP
       run: |
         # Create a batch file for SFTP commands
@@ -45,4 +50,4 @@ jobs:
         EOF
         
         # Execute SFTP with sshpass
-        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -P ${{ secrets.FTP_PORT }} -b sftp_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
+        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -o PasswordAuthentication=yes -o PreferredAuthentications=password -P ${{ secrets.FTP_PORT }} -b sftp_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
