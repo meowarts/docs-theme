@@ -8,7 +8,7 @@ Description: A documentation-first, block-based WordPress theme built entirely o
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Version: 1.2.9
+Version: 1.2.10
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: docs-theme
@@ -510,6 +510,7 @@ body.admin-bar .docs-sidebar-right {
   color: var(--color-foreground);
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
   transition: color 0.2s ease;
 }
 .page-link:hover {

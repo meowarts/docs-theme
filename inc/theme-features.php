@@ -17,3 +17,4 @@ require_once get_template_directory() . '/inc/features/font-options.php';
 require_once get_template_directory() . '/inc/features/block-styles.php';
 require_once get_template_directory() . '/inc/features/page-excerpts.php';
 require_once get_template_directory() . '/inc/features/page-emoticons.php';
+require_once get_template_directory() . '/inc/features/admin-category-menu.php';

@@ -498,6 +498,7 @@ body.admin-bar .docs-sidebar-right {
   color: var(--color-foreground);
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
   transition: color 0.2s ease;
 }
 .page-link:hover {
