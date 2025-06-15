@@ -23,23 +23,20 @@ jobs:
     - name: Build theme
       run: npm run build
 
-    - name: Deploy to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+    - name: Prepare deployment files
+      run: |
+        # Create deployment directory
+        mkdir -p deploy
+        # Copy everything except excluded files
+        rsync -av --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='assets/scss' --exclude='package*.json' --exclude='*.md' --exclude='.gitignore' --exclude='.editorconfig' --exclude='bump-version.js' --exclude='deploy' ./ deploy/
+
+    - name: Deploy via SFTP
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         port: ${{ secrets.FTP_PORT }}
-        protocol: ftps
-        server-dir: /wp-content/themes/docs-theme/
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/node_modules/**
-          **/assets/scss/**
-          .github/**
-          package.json
-          package-lock.json
-          README.md
-          .gitignore
-          .editorconfig
+        local_path: './deploy/'
+        remote_path: '/wp-content/themes/docs-theme/'
+        sftpArgs: '-o ConnectTimeout=5'

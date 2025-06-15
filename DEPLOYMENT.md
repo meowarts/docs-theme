@@ -1,20 +1,20 @@
 # Deployment Setup
 
-## GitHub Actions FTP Deployment
+## GitHub Actions SFTP Deployment
 
-This theme is automatically deployed to WordPress via FTP on every push to the main branch.
+This theme is automatically deployed to WordPress via SFTP on every push to the main branch.
 
 ### Setup Instructions
 
 1. Go to your GitHub repository settings
 2. Navigate to Settings > Secrets and variables > Actions
 3. Add the following secrets:
-   - `FTP_SERVER`: Your FTP server address (e.g., ftp.yourdomain.com)
-   - `FTP_USERNAME`: Your FTP username
-   - `FTP_PASSWORD`: Your FTP password
-   - `FTP_PORT`: Your FTP port (required for non-standard ports)
+   - `FTP_SERVER`: Your SFTP server address (e.g., 35.240.176.35)
+   - `FTP_USERNAME`: Your SFTP username
+   - `FTP_PASSWORD`: Your SFTP password
+   - `FTP_PORT`: Your SFTP port (e.g., 61352)
 
-Note: The deployment uses FTPS (FTP over TLS) for secure transfers.
+Note: The deployment uses SFTP (SSH File Transfer Protocol) for secure transfers.
 
 ### Version Management
 
