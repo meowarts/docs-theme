@@ -259,10 +259,17 @@ async function main() {
         let newVersion;
         if (['patch', 'minor', 'major'].includes(command)) {
             newVersion = bumpVersion(command);
+            // Rebuild after version bump to update style.css with new version
+            runCommand('npm run build', 'Rebuilding theme with new version');
+        } else if (command === 'deploy' && versionType === 'bump') {
+            // Handle legacy 'deploy bump' command
+            newVersion = bumpVersion('patch');
+            // Rebuild after version bump to update style.css with new version
+            runCommand('npm run build', 'Rebuilding theme with new version');
+        } else {
+            // Build theme
+            runCommand('npm run build', 'Building theme');
         }
-
-        // Build theme
-        runCommand('npm run build', 'Building theme');
 
         // Prepare deployment files
         prepareDeployment();
