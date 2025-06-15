@@ -9,10 +9,16 @@
 namespace DocsTheme;
 
 // Theme constants.
-$theme = wp_get_theme();
-define( 'DOCS_THEME_VERSION', $theme->get( 'Version' ) );
 define( 'DOCS_THEME_DIR', get_template_directory() );
 define( 'DOCS_THEME_URI', get_template_directory_uri() );
+
+// Get theme version from style.css
+$style_css = file_get_contents( DOCS_THEME_DIR . '/style.css' );
+if ( preg_match( '/Version:\s*(.+)/', $style_css, $matches ) ) {
+    define( 'DOCS_THEME_VERSION', trim( $matches[1] ) );
+} else {
+    define( 'DOCS_THEME_VERSION', '1.0.0' ); // Fallback
+}
 
 // Load theme features
 require_once DOCS_THEME_DIR . '/inc/theme-features.php';
@@ -47,17 +53,13 @@ function enqueue_scripts() {
 		DOCS_THEME_VERSION
 	);
 	
-	wp_enqueue_style(
-		'docs-theme-main',
-		DOCS_THEME_URI . '/assets/css/style.css',
-		array( 'docs-theme-style' ),
-		DOCS_THEME_VERSION
-	);
+	// Note: We don't need to enqueue assets/css/style.css because 
+	// the root style.css now contains all styles
 	
 	wp_enqueue_style(
 		'docs-theme-navigation',
 		DOCS_THEME_URI . '/assets/css/navigation.css',
-		array( 'docs-theme-main' ),
+		array( 'docs-theme-style' ),
 		DOCS_THEME_VERSION
 	);
 	

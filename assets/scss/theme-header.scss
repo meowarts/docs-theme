@@ -7,7 +7,7 @@ Description: A documentation-first, block-based WordPress theme built entirely o
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
-Version: 1.2.6
+Version: 1.2.7
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: docs-theme
@@ -30,6 +30,10 @@ Use it to make something cool, have fun, and share what you've learned with othe
 @import 'components/sidebar-navigation';
 @import 'components/table-of-contents';
 @import 'components/content';
-@import 'components/code';
 @import 'components/copy-button';
+@import 'components/code';
 @import 'components/page-subtitle';
+@import 'components/search-modal';
+
+// Utilities
+@import 'utilities/helpers';
