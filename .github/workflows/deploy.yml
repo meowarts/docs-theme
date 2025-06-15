@@ -30,13 +30,19 @@ jobs:
         # Copy everything except excluded files
         rsync -av --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='assets/scss' --exclude='package*.json' --exclude='*.md' --exclude='.gitignore' --exclude='.editorconfig' --exclude='bump-version.js' --exclude='deploy' ./ deploy/
 
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
+
     - name: Deploy via SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        port: ${{ secrets.FTP_PORT }}
-        local_path: './deploy/'
-        remote_path: '/wp-content/themes/docs-theme/'
-        sftpArgs: '-o ConnectTimeout=5'
+      run: |
+        # Create a batch file for SFTP commands
+        cat > sftp_batch << EOF
+        mkdir /wp-content/themes
+        mkdir /wp-content/themes/docs-theme
+        cd /wp-content/themes/docs-theme
+        put -r deploy/* .
+        bye
+        EOF
+        
+        # Execute SFTP with sshpass
+        sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp -o StrictHostKeyChecking=no -P ${{ secrets.FTP_PORT }} -b sftp_batch ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}
