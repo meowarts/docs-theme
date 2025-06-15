@@ -204,50 +204,37 @@ npm run build
 npm run watch
 ```
 
-### Version Management
-**IMPORTANT**: Always bump the version before pushing changes!
+### Deployment
 
-```bash
-# For bug fixes (1.0.0 -> 1.0.1)
-npm run version:patch
+The theme uses a unified deployment script (`deploy.js`) that handles both version bumping and deployment via SFTP.
 
-# For new features (1.0.0 -> 1.1.0)  
-npm run version:minor
+**Setup (one-time)**:
+1. Copy `.env.example` to `.env`
+2. Fill in SFTP credentials in `.env`
 
-# For breaking changes (1.0.0 -> 2.0.0)
-npm run version:major
-```
+**Deployment Commands**:
+- `npm run deploy` - Deploy current version without bumping
+- `npm run deploy:patch` - Bump patch version (1.2.3 → 1.2.4) and deploy
+- `npm run deploy:minor` - Bump minor version (1.2.3 → 1.3.0) and deploy  
+- `npm run deploy:major` - Bump major version (1.2.3 → 2.0.0) and deploy
 
-This updates the version in both `style.css` and `package.json`.
-
-### Automatic Deployment
-The theme is automatically deployed to WordPress via SFTP on every push to the main branch using GitHub Actions.
+**Version-only Commands**:
+- `npm run version:patch` - Only bump patch version (no deployment)
+- `npm run version:minor` - Only bump minor version (no deployment)
+- `npm run version:major` - Only bump major version (no deployment)
 
 **Workflow**:
 1. Make your changes locally
-2. Bump the version: `npm run version:patch`
-3. Commit all changes: `git add . && git commit -m "Your message"`
+2. Deploy with version bump: `npm run deploy:patch`
+3. Commit changes: `git add . && git commit -m "Deploy version X.X.X"`
 4. Push to GitHub: `git push`
-5. GitHub Actions automatically builds and deploys to WordPress
 
-**Deployment Setup** (one-time):
-1. Go to GitHub repository settings
-2. Navigate to Settings > Secrets and variables > Actions
-3. Add these secrets:
-   - `FTP_SERVER`: Your SFTP server address
-   - `FTP_USERNAME`: Your SFTP username
-   - `FTP_PORT`: Your SFTP port (for non-standard ports)
-   - `SSH_PRIVATE_KEY`: Your SSH private key for authentication
-
-**Note**: The deployment uses SSH key authentication. You'll need to generate an SSH key pair and add the public key to your server. See DEPLOYMENT.md for detailed setup instructions.
-
-**What Gets Deployed**:
-- All theme files except:
-  - `.git` and `.github` folders
-  - `node_modules`
-  - SCSS source files (`assets/scss/`)
-  - Development files (package.json, etc.)
-  - Documentation files (.md files)
+**Technical Details**:
+- The `deploy.js` script combines version bumping and deployment
+- Updates both `style.css` and `package.json` version numbers
+- Uses `sshpass` for SFTP authentication
+- Excludes development files from deployment (node_modules, SCSS, etc.)
+- Creates temporary `deploy/` directory that gets cleaned up after upload
 
 ### SCSS Structure
 ```

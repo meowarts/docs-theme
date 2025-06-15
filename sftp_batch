@@ -1,6 +1,0 @@
--mkdir /wp-content
--mkdir /wp-content/themes
--mkdir /wp-content/themes/docs-theme
-cd /wp-content/themes/docs-theme
-put -r deploy/* .
-bye

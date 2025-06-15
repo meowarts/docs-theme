@@ -1,34 +1,68 @@
 # Docs Theme
 
-A modern, documentation-first WordPress theme built on Full Site Editing (FSE).
+A modern, documentation-first WordPress theme with automatic navigation generation.
 
 ## Features
 
-- 📚 **Documentation-First Design** - Optimized for technical documentation and knowledge bases
-- 🎨 **Full Site Editing** - Complete control through WordPress Site Editor
-- 📑 **Auto Table of Contents** - Automatically generates navigation from your headings
-- 🗂️ **Flexible Navigation** - Multiple collapsible menu support in sidebar
-- 🌙 **Dark Mode** - Professional dark theme by default
-- 💻 **Developer Friendly** - Code highlighting and copy-to-clipboard functionality
-- 📱 **Responsive** - Works beautifully on all devices
+- 📚 **Auto Navigation** - Sidebar automatically lists all pages by category
+- 📑 **Auto Table of Contents** - Generates TOC from page headings
+- 🗂️ **Page Categories** - Organize pages into sections  
+- 🌙 **Dark Theme** - Professional dark design for documentation
+- 💻 **Code Friendly** - Syntax highlighting and copy buttons
+- 📱 **Responsive** - Works on all devices
 
-## Quick Start
+## Development & Deployment
 
-1. Upload theme to `/wp-content/themes/docs-theme/`
-2. Activate in WordPress admin
-3. Create navigation menus
-4. Add menus to left sidebar widget area
-5. Start creating documentation pages!
+### Setup
+```bash
+npm install
+```
 
-## Requirements
+### Development Commands
+```bash
+npm run build       # Build CSS files
+npm run watch:css   # Watch SCSS for changes
+```
 
-- WordPress 6.0+
-- PHP 7.4+
+### Deployment Commands
 
-## Author
+**Deploy with version bump (recommended):**
+```bash
+npm run deploy:patch   # Bug fixes (1.2.3 → 1.2.4)
+npm run deploy:minor   # New features (1.2.3 → 1.3.0)  
+npm run deploy:major   # Breaking changes (1.2.3 → 2.0.0)
+```
 
-Built with ❤️ by [Meow Apps](https://meowapps.com)
+**Deploy without version bump:**
+```bash
+npm run deploy        # Deploy current version
+```
+
+**Version bump only (no deployment):**
+```bash
+npm run version:patch  # Just bump version
+npm run version:minor
+npm run version:major
+```
+
+### Initial Deployment Setup
+1. Copy `.env.example` to `.env`
+2. Fill in your SFTP credentials:
+   ```
+   SFTP_HOST=your-server.com
+   SFTP_PORT=22
+   SFTP_USER=your-username
+   SFTP_PASSWORD=your-password
+   SFTP_REMOTE_PATH=/wp-content/themes/docs-theme
+   ```
+
+### Typical Workflow
+1. Make changes to theme files
+2. Test locally
+3. Deploy with version bump: `npm run deploy:patch`
+4. Commit to git: `git add . && git commit -m "Deploy version X.X.X"`
+5. Push: `git push`
 
 ## License
 
-GPL v2 or later
+GPL v2 or later - Built by [Meow Apps](https://meowapps.com)
