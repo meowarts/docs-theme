@@ -9,9 +9,25 @@
 
 // Header
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-index-sticky);
   background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-hover);
+  border-bottom: 1px solid var(--color-border-ui);
   padding: var(--spacing-md) 0;
+}
+
+// Account for admin bar when logged in
+body.admin-bar .site-header {
+  top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar .site-header {
+    top: 46px;
+  }
 }
 
 .header-inner {
@@ -43,6 +59,7 @@
 // Main content area
 .site-content {
   flex: 1;
+  padding-top: var(--header-height); // Account for fixed header height
 }
 
 .content-wrapper {
@@ -67,7 +84,8 @@
       position: relative;
       height: auto;
       order: -1;
-      border-bottom: 1px solid var(--color-hover);
+      border-bottom: 1px solid var(--color-border-ui);
+      border-right: none;
     }
   }
 }
@@ -78,23 +96,46 @@
   @include sticky-sidebar;
 }
 
+// Adjust sidebars when admin bar is present
+body.admin-bar {
+  .docs-sidebar-left,
+  .docs-sidebar-right {
+    top: calc(var(--header-height) + 32px);
+    height: calc(100vh - var(--header-height) - 32px);
+  }
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar {
+    .docs-sidebar-left,
+    .docs-sidebar-right {
+      top: calc(var(--header-height) + 46px);
+      height: calc(100vh - var(--header-height) - 46px);
+    }
+  }
+}
+
 .docs-sidebar-left {
-  background-color: var(--color-widget-bg);
-  text-align: right;
+  text-align: left;
+  padding: 30px var(--sidebar-padding-horizontal) 0;
+  font-family: var(--font-family-sidebar);
+  border-right: 1px solid var(--color-border-ui);
+  
+  // Add padding to inner content instead
+  .sidebar-pages-navigation {
+    padding-top: var(--content-padding-vertical);
+    padding-bottom: var(--content-padding-vertical);
+  }
 }
 
 .docs-sidebar-right {
-  padding: var(--sidebar-padding-vertical) var(--sidebar-padding-horizontal);
-  
-  // Align first element with main content
-  @include aligned-column-padding;
+  padding: 30px var(--sidebar-padding-horizontal) 0;
+  border-left: 1px solid var(--color-border-ui);
 }
 
 // Main content
 .site-main {
   padding: var(--content-padding-vertical) var(--content-padding-horizontal);
-  max-width: var(--layout-content-width);
-  margin: 0 auto;
   width: 100%;
   
   @include mobile {

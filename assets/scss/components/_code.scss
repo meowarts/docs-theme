@@ -1,0 +1,89 @@
+// Code Component
+// Syntax highlighting and code blocks
+
+// WordPress code block styling
+.wp-block-code {
+  border: 1px solid var(--color-border-ui);
+  border-radius: 0;
+  padding: var(--spacing-sm);
+}
+
+// Override Highlight.js theme to match our dark theme
+.hljs {
+  background: var(--color-code-bg) !important;
+  color: var(--color-foreground) !important;
+}
+
+// Ensure proper styling for WordPress code blocks
+.wp-block-code,
+.wp-code-block {
+  code.hljs {
+    font-family: var(--font-family-mono);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+}
+
+// Custom token colors to match our theme
+.hljs-comment,
+.hljs-quote {
+  color: #7c8a99;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+  color: #c792ea;
+}
+
+.hljs-number,
+.hljs-string,
+.hljs-meta .hljs-string,
+.hljs-literal,
+.hljs-doctag,
+.hljs-regexp {
+  color: #a3d5a3;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #82aaff;
+}
+
+.hljs-attribute,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class .hljs-title,
+.hljs-type {
+  color: #ffcb8b;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-link {
+  color: #f78c6c;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #89ddff;
+}
+
+.hljs-deletion {
+  color: #ff5370;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

@@ -27,11 +27,11 @@
 
 .site-title {
   margin: 0;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: 700;
   
   a {
-    color: var(--color-foreground);
+    color: #ffffff;
     text-decoration: none;
   }
 }
@@ -64,7 +64,7 @@
   width: 100%;
   padding: calc(var(--spacing-md) * 0.75) var(--spacing-2xl) calc(var(--spacing-md) * 0.75) var(--spacing-md);
   background-color: var(--color-widget-bg);
-  border: 1px solid var(--color-hover);
+  border: 1px solid var(--color-border-ui);
   border-radius: 0.375rem;
   color: var(--color-foreground);
   font-family: inherit;

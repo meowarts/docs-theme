@@ -76,6 +76,55 @@ function enqueue_scripts() {
 		DOCS_THEME_VERSION,
 		true
 	);
+	
+	// Highlight.js for syntax highlighting
+	wp_enqueue_style(
+		'highlight-css',
+		'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css',
+		array(),
+		'11.9.0'
+	);
+	
+	wp_enqueue_script(
+		'highlight-core',
+		'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+		array(),
+		'11.9.0',
+		true
+	);
+	
+	// Add language support
+	wp_enqueue_script(
+		'highlight-php',
+		'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js',
+		array('highlight-core'),
+		'11.9.0',
+		true
+	);
+	
+	wp_enqueue_script(
+		'highlight-bash',
+		'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js',
+		array('highlight-core'),
+		'11.9.0',
+		true
+	);
+	
+	// Initialize Highlight.js
+	wp_add_inline_script('highlight-core', '
+		document.addEventListener("DOMContentLoaded", function() {
+			// Configure highlight.js
+			hljs.configure({
+				ignoreUnescapedHTML: true,
+				languages: ["php", "javascript", "bash", "css", "html", "xml", "json", "sql", "shell"]
+			});
+			
+			// Apply to all code blocks
+			document.querySelectorAll(".wp-block-code code, .wp-code-block code, pre code").forEach(function(block) {
+				hljs.highlightElement(block);
+			});
+		});
+	');
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts' );
 

@@ -85,7 +85,6 @@ function render_page_tree( $pages, $parent_id = 0, $current_page_id = 0 ) {
 }
 ?>
 
-<div class="sidebar-pages-navigation">
 	<?php if ( ! empty( $categories ) ) : ?>
 		<?php foreach ( $categories as $category ) : ?>
 			<div class="page-category-section">
@@ -168,4 +167,3 @@ function render_page_tree( $pages, $parent_id = 0, $current_page_id = 0 ) {
 			</ul>
 		</div>
 	<?php endif; ?>
-</div>

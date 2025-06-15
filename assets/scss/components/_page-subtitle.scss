@@ -4,7 +4,7 @@
 .page-subtitle {
   margin-top: calc(var(--spacing-xs) * 0.5);
   margin-bottom: 0;
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 400;
   color: var(--color-muted);
   line-height: var(--line-height-tight);
@@ -12,5 +12,5 @@
 
 // Adjust spacing between header and content when subtitle is present
 .entry-header {
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--spacing-xl);
 }

@@ -1,23 +1,11 @@
 // Sidebar Navigation Component
 // Automatic page hierarchy navigation
 
-.sidebar-pages-navigation {
-  text-align: left;
-  padding: var(--content-padding-vertical) var(--sidebar-padding-horizontal);
-  font-family: var(--font-family-sidebar);
-  position: sticky;
-  top: var(--spacing-xl);
-}
-
 .page-category-section {
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-xl);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.1);
+  margin-bottom: var(--spacing-lg);
   
   &:last-child {
     margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
   }
   
   // Ensure first category aligns with main content title
@@ -28,12 +16,17 @@
 
 .category-title {
   @include section-title;
+  font-size: 12px;
+  margin-bottom: 0;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .pages-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  margin-top: 10px;
 }
 
 .page-item {
@@ -62,14 +55,14 @@
 .page-link {
   flex: 1;
   display: block;
-  padding: var(--spacing-sm) 0;
+  padding: var(--spacing-xs) 0;
   color: var(--color-foreground);
   text-decoration: none;
   font-weight: 500;
   transition: color $transition-fast;
   
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-accent);
   }
   
   .current-page > .page-item-wrapper > & {

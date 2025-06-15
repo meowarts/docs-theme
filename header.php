@@ -49,4 +49,4 @@
 	</header>
 
 	<div id="content" class="site-content">
-		<div class="content-wrapper"
+		<div class="content-wrapper">

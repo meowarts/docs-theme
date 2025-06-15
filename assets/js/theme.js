@@ -11,6 +11,7 @@
 		initSearchShortcut();
 		initSmoothAnchors();
 		initCollapsibleMenus();
+		initHighlightJS();
 	});
 
 	/**
@@ -232,6 +233,65 @@
 			if (activeHeading && link.getAttribute('href') === '#' + activeHeading.id) {
 				link.classList.add('is-active');
 			}
+		});
+	}
+
+	/**
+	 * Initialize Highlight.js for WordPress code blocks
+	 */
+	function initHighlightJS() {
+		// Wait for hljs to be available
+		if (typeof hljs === 'undefined') {
+			setTimeout(initHighlightJS, 100);
+			return;
+		}
+		
+		// Find all code blocks
+		const codeBlocks = document.querySelectorAll('.wp-block-code code, .wp-code-block code, pre code');
+		
+		codeBlocks.forEach(function(code) {
+			// Skip if already highlighted
+			if (code.classList.contains('hljs')) {
+				return;
+			}
+			
+			// Auto-detect language if not specified
+			let languageClass = '';
+			const classes = code.className.split(' ');
+			for (let cls of classes) {
+				if (cls.startsWith('language-')) {
+					languageClass = cls;
+					break;
+				}
+			}
+			
+			// If no language class, try to detect
+			if (!languageClass) {
+				const content = code.textContent || '';
+				
+				// PHP detection
+				if (content.includes('<?php') || content.includes('<?=') || 
+				    content.match(/\$\w+\s*=/) || content.includes('->') || 
+				    content.includes('::') || content.match(/function\s+\w+\s*\(/)) {
+					code.className += ' language-php';
+				}
+				// JavaScript detection
+				else if (content.match(/\b(const|let|var|function|=>|async|await)\b/) ||
+				         content.includes('console.') || content.includes('document.')) {
+					code.className += ' language-javascript';
+				}
+				// Bash detection
+				else if (content.match(/^[$#]\s/m) || content.match(/\b(npm|git|cd|mkdir)\b/)) {
+					code.className += ' language-bash';
+				}
+				// CSS detection
+				else if (content.match(/[.#]\w+\s*{|\w+\s*:\s*[^;]+;/)) {
+					code.className += ' language-css';
+				}
+			}
+			
+			// Apply highlighting
+			hljs.highlightElement(code);
 		});
 	}
 

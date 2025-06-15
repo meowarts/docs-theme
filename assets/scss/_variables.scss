@@ -5,13 +5,14 @@
 :root {
   // Base colors
   --color-background: #0f172a;
-  --color-foreground: rgb(229, 231, 235);
+  --color-foreground: #cad3df;
   --color-muted: #94a3b8;
   --color-primary: #2563eb;
   --color-secondary: #1e40af;
   --color-accent: rgba(78, 185, 236, 1);
   --color-accent-bg: rgba(78, 185, 236, 0.1);
   --color-hover: #334155;
+  --color-border-ui: rgba(255, 255, 255, 0.1);
   --color-code-bg: #1e293b;
   --color-widget-bg: #1e293b;
   --color-border: #e5e7eb;
@@ -39,9 +40,9 @@
   --font-size-base: 1rem;
   --font-size-lg: 1.0625rem;
   --font-size-xl: 1.125rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 2rem;
-  --font-size-4xl: 2.5rem;
+  --font-size-2xl: 1.25rem;
+  --font-size-3xl: 1.5rem;
+  --font-size-4xl: 1.875rem;
   
   // Line heights
   --line-height-tight: 1.2;
@@ -53,6 +54,7 @@
   --layout-max-width: 1400px;
   --layout-content-width: 760px;
   --layout-sidebar-width: 280px;
+  --header-height: calc(var(--spacing-3xl) + var(--spacing-md));
   
   // Alignment helpers
   --content-padding-vertical: var(--spacing-2xl);
