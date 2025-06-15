@@ -1,78 +1,79 @@
-# Deployment Setup
+# Local Deployment
 
-## GitHub Actions SFTP Deployment
+## Simple SFTP Deployment Script
 
-This theme is automatically deployed to WordPress via SFTP on every push to the main branch.
+This theme includes a simple deployment script that builds and uploads your theme to WordPress via SFTP.
 
-### Setup Instructions
+### Setup (One-time)
 
-1. Go to your GitHub repository settings
-2. Navigate to Settings > Secrets and variables > Actions
-3. Add the following secrets:
-   - `FTP_SERVER`: Your SFTP server address (e.g., 35.240.176.35)
-   - `FTP_USERNAME`: Your SFTP username
-   - `FTP_PORT`: Your SFTP port (e.g., 61352)
-   - `SSH_PRIVATE_KEY`: Your SSH private key for authentication
-
-### SSH Key Setup
-
-1. Generate an SSH key pair locally:
+1. Install `sshpass` (for password authentication):
    ```bash
-   ssh-keygen -t rsa -b 4096 -f ~/.ssh/deploy_key
+   # macOS
+   brew install hudochenkov/sshpass/sshpass
+   
+   # Ubuntu/Debian
+   sudo apt-get install sshpass
    ```
 
-2. Add the public key to your server:
+2. Copy the environment template:
    ```bash
-   ssh-copy-id -i ~/.ssh/deploy_key.pub -p 61352 github@35.240.176.35
-   ```
-   Or manually append the public key to `~/.ssh/authorized_keys` on your server.
-
-3. Copy the private key content:
-   ```bash
-   cat ~/.ssh/deploy_key
+   cp .env.example .env
    ```
 
-4. Add the entire private key (including `-----BEGIN/END-----` lines) as the `SSH_PRIVATE_KEY` secret in GitHub.
+3. Edit `.env` with your SFTP credentials:
+   ```bash
+   SFTP_HOST=35.240.176.35
+   SFTP_PORT=61352
+   SFTP_USER=github
+   SFTP_PASSWORD=your_password_here
+   SFTP_REMOTE_PATH=/wp-content/themes/docs-theme
+   ```
 
-Note: The deployment uses SFTP (SSH File Transfer Protocol) with SSH key authentication for secure transfers.
+### Daily Workflow
 
-### Version Management
+1. **Make your changes** to the theme
+2. **Bump the version**:
+   ```bash
+   npm run version:patch  # or minor/major
+   ```
+3. **Deploy to WordPress**:
+   ```bash
+   npm run deploy
+   # OR
+   ./deploy.sh
+   ```
 
-Before pushing changes, remember to bump the version:
-
-```bash
-# For bug fixes (1.0.0 -> 1.0.1)
-npm run version:patch
-
-# For new features (1.0.0 -> 1.1.0)
-npm run version:minor
-
-# For breaking changes (1.0.0 -> 2.0.0)
-npm run version:major
-```
-
-Then commit the version change:
-```bash
-git commit -am "Bump version to X.X.X"
-git push
-```
-
-### Deployment Process
-
-1. Make your changes
-2. Bump the version: `npm run version:patch`
-3. Commit all changes: `git add . && git commit -m "Your message"`
-4. Push to GitHub: `git push`
-5. GitHub Actions will automatically:
-   - Build the theme
-   - Deploy to your WordPress site via FTP
+That's it! The script will:
+- Build your CSS files
+- Create a clean deployment package (excludes dev files)
+- Upload everything to your WordPress site via SFTP
+- Show you a nice progress report
 
 ### What Gets Deployed
 
-The following files/folders are excluded from deployment:
-- `.git` and `.github` folders
+**Included:**
+- All PHP theme files
+- Compiled CSS files
+- JavaScript files
+- Images and assets
+
+**Excluded:**
+- `.git` and development files
 - `node_modules`
 - SCSS source files
-- Development files (package.json, etc.)
+- Package files (package.json, etc.)
+- Documentation files (*.md)
+- The deployment script itself
 
-Only the production-ready theme files are deployed.
+### Troubleshooting
+
+**"sshpass: command not found"**
+- Install sshpass using the commands above
+
+**"Permission denied"**
+- Double-check your credentials in `.env`
+- Test manually: `sftp -P 61352 github@35.240.176.35`
+
+**"Connection refused"**
+- Check if the server/port is correct
+- Make sure you can connect manually first
