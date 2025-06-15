@@ -1,0 +1,17 @@
+/**
+ * Block Editor Styles
+ */
+
+/* Page Subtitle Panel */
+.docs-theme-page-subtitle-panel .components-textarea-control__input {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.docs-theme-page-subtitle-panel .components-base-control__help {
+    margin-top: 4px;
+    font-size: 12px;
+    font-style: normal;
+    color: #757575;
+}

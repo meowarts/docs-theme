@@ -5,17 +5,20 @@
  * Adds subtitle support to pages with automatic display below the title
  */
 
-// Add subtitle meta box to page editor
+// Add subtitle meta box to page editor (Classic Editor fallback)
 add_action('add_meta_boxes', 'docs_theme_add_subtitle_meta_box');
 function docs_theme_add_subtitle_meta_box() {
-    add_meta_box(
-        'docs_theme_subtitle',
-        __('Page Subtitle', 'docs-theme'),
-        'docs_theme_subtitle_meta_box_callback',
-        'page',
-        'side',
-        'default'
-    );
+    // Only add meta box if not using block editor
+    if (!use_block_editor_for_post_type('page')) {
+        add_meta_box(
+            'docs_theme_subtitle',
+            __('Page Subtitle', 'docs-theme'),
+            'docs_theme_subtitle_meta_box_callback',
+            'page',
+            'side',
+            'default'
+        );
+    }
 }
 
 // Meta box callback
@@ -74,6 +77,38 @@ function docs_theme_register_subtitle_meta() {
             return current_user_can('edit_posts');
         }
     ));
+}
+
+// Enqueue block editor assets
+add_action('enqueue_block_editor_assets', 'docs_theme_enqueue_subtitle_block_editor_assets');
+function docs_theme_enqueue_subtitle_block_editor_assets() {
+    // Only load on page editor
+    $screen = get_current_screen();
+    if ($screen && $screen->post_type === 'page') {
+        wp_enqueue_script(
+            'docs-theme-page-subtitle-editor',
+            get_template_directory_uri() . '/assets/js/page-subtitle-block-editor.js',
+            array(
+                'wp-plugins',
+                'wp-edit-post',
+                'wp-element',
+                'wp-components',
+                'wp-data',
+                'wp-core-data',
+                'wp-i18n'
+            ),
+            defined('DOCS_THEME_VERSION') ? DOCS_THEME_VERSION : '1.0.0',
+            true
+        );
+        
+        // Enqueue editor styles
+        wp_enqueue_style(
+            'docs-theme-editor-styles',
+            get_template_directory_uri() . '/assets/css/editor-styles.css',
+            array(),
+            defined('DOCS_THEME_VERSION') ? DOCS_THEME_VERSION : '1.0.0'
+        );
+    }
 }
 
 // Helper function to get page subtitle
