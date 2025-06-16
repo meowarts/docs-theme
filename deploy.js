@@ -17,85 +17,48 @@ function log(message, color = 'reset') {
     console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-function showHelp() {
-    log('🚀 Docs Theme Deployment Script', 'blue');
-    log('================================');
-    log('');
-    log('Usage:', 'yellow');
-    log('  node deploy.js [command] [options]');
-    log('');
-    log('Commands:', 'yellow');
-    log('  deploy              Deploy without version bump');
-    log('  patch               Bump patch version and deploy');
-    log('  minor               Bump minor version and deploy');
-    log('  major               Bump major version and deploy');
-    log('  version [type]      Only bump version (patch/minor/major)');
-    log('');
-    log('Examples:', 'yellow');
-    log('  npm run deploy         # Deploy current version');
-    log('  npm run deploy:patch   # Bump patch (1.2.3 → 1.2.4) and deploy');
-    log('  npm run deploy:minor   # Bump minor (1.2.3 → 1.3.0) and deploy');
-    log('  npm run deploy:major   # Bump major (1.2.3 → 2.0.0) and deploy');
-    log('  npm run version:patch  # Only bump patch version');
+function getDateVersion() {
+    const now = new Date();
+    const year = String(now.getFullYear()).slice(-2); // Last 2 digits of year
+    const month = now.getMonth() + 1; // getMonth() returns 0-11
+    
+    // Read version history to determine deployment number
+    const versionHistoryPath = path.join(__dirname, '.version-history.json');
+    let versionHistory = {};
+    
+    if (fs.existsSync(versionHistoryPath)) {
+        versionHistory = JSON.parse(fs.readFileSync(versionHistoryPath, 'utf8'));
+    }
+    
+    const monthKey = `${year}.${month}`;
+    const deploymentNumber = (versionHistory[monthKey] || 0) + 1;
+    
+    // Update version history
+    versionHistory[monthKey] = deploymentNumber;
+    fs.writeFileSync(versionHistoryPath, JSON.stringify(versionHistory, null, 2) + '\n');
+    
+    return `${year}.${month}.${deploymentNumber}`;
 }
 
-function bumpVersion(versionType = 'patch') {
-    log(`📈 Bumping ${versionType} version...`, 'yellow');
+function updateVersion(newVersion) {
+    log(`📈 Updating version to ${newVersion}...`, 'yellow');
     
-    // Read from theme-header.scss as the source of truth
+    // Update assets/scss/theme-header.scss
     const themeHeaderPath = path.join(__dirname, 'assets/scss/theme-header.scss');
-    if (!fs.existsSync(themeHeaderPath)) {
-        log('❌ Could not find assets/scss/theme-header.scss', 'red');
-        process.exit(1);
-    }
-    
     const themeHeaderContent = fs.readFileSync(themeHeaderPath, 'utf8');
-
-    // Extract current version
-    const versionMatch = themeHeaderContent.match(/Version:\s*(\d+)\.(\d+)\.(\d+)/);
-    if (!versionMatch) {
-        log('❌ Could not find version in theme-header.scss', 'red');
-        process.exit(1);
-    }
-
-    let [, major, minor, patch] = versionMatch.map(Number);
-
-    // Increment version based on type
-    switch (versionType) {
-        case 'major':
-            major++;
-            minor = 0;
-            patch = 0;
-            break;
-        case 'minor':
-            minor++;
-            patch = 0;
-            break;
-        case 'patch':
-        default:
-            patch++;
-            break;
-    }
-
-    const newVersion = `${major}.${minor}.${patch}`;
-
-    // Update assets/scss/theme-header.scss (the source of truth)
     const updatedThemeHeader = themeHeaderContent.replace(
         /Version:\s*\d+\.\d+\.\d+/,
         `Version: ${newVersion}`
     );
     fs.writeFileSync(themeHeaderPath, updatedThemeHeader);
     
-    // style.css will be updated when we rebuild
-
     // Update package.json
     const packagePath = path.join(__dirname, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
     packageJson.version = newVersion;
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');
-
-    log(`✅ Version bumped to ${newVersion}`, 'green');
-    return newVersion;
+    
+    log(`✅ Version updated to ${newVersion}`, 'green');
 }
 
 function loadEnv() {
@@ -133,12 +96,13 @@ function validateCredentials(env) {
     }
 }
 
-function runCommand(command, description) {
+function build() {
     try {
-        log(`📦 ${description}...`, 'yellow');
-        execSync(command, { stdio: 'inherit' });
+        log('📦 Building CSS...', 'yellow');
+        execSync('npm run build', { stdio: 'inherit' });
+        log('✅ CSS built successfully', 'green');
     } catch (error) {
-        log(`❌ Failed: ${description}`, 'red');
+        log('❌ Failed to build CSS', 'red');
         process.exit(1);
     }
 }
@@ -159,16 +123,16 @@ function prepareDeployment() {
         --exclude='.claude' \
         --exclude='node_modules' \
         --exclude='assets/scss' \
+        --exclude='assets/css' \
         --exclude='package*.json' \
         --exclude='*.md' \
         --exclude='.gitignore' \
         --exclude='.editorconfig' \
-        --exclude='bump-version.js' \
         --exclude='deploy.js' \
         --exclude='.env*' \
         --exclude='deploy' \
         --exclude='*.map' \
-        --exclude='sftp_batch' \
+        --exclude='.version-history.json' \
         ./ deploy/`;
 
     execSync(rsyncCommand, { stdio: 'inherit' });
@@ -228,44 +192,20 @@ function cleanup() {
 }
 
 async function main() {
-    const command = process.argv[2] || 'help';
-    const versionType = process.argv[3] || 'patch';
-
     try {
-        if (command === 'help' || command === '--help' || command === '-h') {
-            showHelp();
-            return;
-        }
+        log('🚀 Docs Theme Deployment', 'blue');
+        log('========================');
 
-        log('🚀 Docs Theme Deployment Script', 'blue');
-        log('==================================');
-
-        // Handle version-only command
-        if (command === 'version') {
-            const newVersion = bumpVersion(versionType);
-            log(`\nDon't forget to commit with: git commit -am "Bump version to ${newVersion}"`, 'yellow');
-            return;
-        }
-
-        // Load and validate environment for deployment
+        // Load and validate environment
         const env = loadEnv();
         validateCredentials(env);
 
-        // Handle version bump commands
-        let newVersion;
-        if (['patch', 'minor', 'major'].includes(command)) {
-            newVersion = bumpVersion(command);
-            // Rebuild after version bump to update style.css with new version
-            runCommand('npm run build', 'Rebuilding theme with new version');
-        } else if (command === 'deploy' && versionType === 'bump') {
-            // Handle legacy 'deploy bump' command
-            newVersion = bumpVersion('patch');
-            // Rebuild after version bump to update style.css with new version
-            runCommand('npm run build', 'Rebuilding theme with new version');
-        } else {
-            // Build theme
-            runCommand('npm run build', 'Building theme');
-        }
+        // Get new version and update files
+        const newVersion = getDateVersion();
+        updateVersion(newVersion);
+
+        // Build CSS with new version
+        build();
 
         // Prepare deployment files
         prepareDeployment();
@@ -274,12 +214,8 @@ async function main() {
         await deployViaSFTP(env);
 
         log('✅ Deployment successful!', 'green');
-        if (newVersion) {
-            log(`🎉 Version ${newVersion} deployed to your WordPress site`, 'green');
-            log(`\nDon't forget to commit with: git commit -am "Deploy version ${newVersion}"`, 'yellow');
-        } else {
-            log('🎉 Theme deployed to your WordPress site', 'green');
-        }
+        log(`🎉 Version ${newVersion} deployed to your WordPress site`, 'green');
+        log(`\nDon't forget to commit with: git commit -am "Deploy version ${newVersion}"`, 'yellow');
 
     } catch (error) {
         log('❌ Deployment failed!', 'red');
@@ -287,7 +223,6 @@ async function main() {
         process.exit(1);
     } finally {
         cleanup();
-        log('🎯 Deployment complete!', 'blue');
     }
 }
 

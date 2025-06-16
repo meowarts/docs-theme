@@ -29,9 +29,59 @@ get_header(); ?>
 		), get_the_ID() ) );
 		?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+			<div class="docs-breadcrumbs-wrapper">
+				<?php 
+				// Display breadcrumbs
+				if ( function_exists( 'docs_theme_display_breadcrumbs' ) ) {
+					docs_theme_display_breadcrumbs();
+				}
+				?>
+				
+				<?php if ( empty( $child_pages ) && ( 
+					( function_exists( 'docs_theme_show_reading_time' ) && docs_theme_show_reading_time() ) ||
+					( function_exists( 'docs_theme_show_last_updated' ) && docs_theme_show_last_updated() )
+				) ) : ?>
+					<div class="docs-badges-wrapper">
+						<?php
+						// Display reading time as a badge
+						if ( function_exists( 'docs_theme_show_reading_time' ) && docs_theme_show_reading_time() ) {
+							$content = get_the_content();
+							$reading_time = docs_theme_calculate_reading_time($content);
+							?>
+							<span class="docs-reading-time-badge">
+								<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M8 4V8L10.5 10.5M14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+								<?php printf(esc_html__('%d min read', 'docs-theme'), $reading_time); ?>
+							</span>
+						<?php } ?>
+						<?php
+						// Display last updated date as a badge
+						if ( function_exists( 'docs_theme_show_last_updated' ) && docs_theme_show_last_updated() ) {
+							$modified_timestamp = get_the_modified_time('U');
+							$relative_time = docs_theme_get_relative_time($modified_timestamp);
+							$age_class = docs_theme_get_age_class($modified_timestamp);
+							?>
+							<span class="docs-last-updated-badge <?php echo esc_attr($age_class); ?>">
+								<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M11.5 1.5L14.5 4.5L5 14L2 15L3 12L12.5 2.5L11.5 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+								<?php echo esc_html($relative_time); ?>
+							</span>
+						<?php } ?>
+					</div>
+				<?php endif; ?>
+			</div>
+			
 			<header class="entry-header">
-				<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-				<?php do_action( 'docs_theme_after_page_title' ); ?>
+				<h1 class="entry-title">
+						<?php echo get_the_title(); ?>
+				</h1>
+				
+				<?php 
+				// Display subtitle
+				do_action( 'docs_theme_after_page_title' ); 
+				?>
 			</header>
 
 			<div class="entry-content">

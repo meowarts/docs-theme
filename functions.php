@@ -48,13 +48,10 @@ function enqueue_scripts() {
 	// Enqueue theme styles.
 	wp_enqueue_style(
 		'docs-theme-style',
-		get_stylesheet_uri(),
+		get_template_directory_uri() . '/style.min.css',
 		array(),
 		DOCS_THEME_VERSION
 	);
-	
-	// Note: We don't need to enqueue assets/css/style.css because 
-	// the root style.css now contains all styles
 	
 	wp_enqueue_style(
 		'docs-theme-navigation',

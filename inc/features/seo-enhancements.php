@@ -123,7 +123,7 @@ function docs_theme_title_parts($title) {
 }
 
 // Add breadcrumbs schema
-function docs_theme_get_breadcrumbs() {
+function docs_theme_get_breadcrumbs_schema() {
     if (!is_page() || is_front_page()) {
         return;
     }
@@ -170,7 +170,7 @@ function docs_theme_get_breadcrumbs() {
     
     echo '<script type="application/ld+json">' . json_encode($schema) . '</script>' . "\n";
 }
-add_action('wp_footer', 'docs_theme_get_breadcrumbs');
+add_action('wp_footer', 'docs_theme_get_breadcrumbs_schema');
 
 // Create XML sitemap for pages
 add_action('init', 'docs_theme_sitemap_rewrite_rule');

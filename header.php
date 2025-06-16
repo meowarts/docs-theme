@@ -42,7 +42,26 @@
 					</button>
 				</div>
 
-				<div class="header-spacer"></div>
+				<div class="header-spacer">
+					<div class="header-buttons">
+						<?php
+						// Green button
+						$green_button = docs_theme_get_green_button();
+						if ($green_button) : ?>
+							<a href="<?php echo esc_url($green_button['url']); ?>" class="header-button header-button--green" target="_blank" rel="noopener noreferrer">
+								<?php echo esc_html($green_button['label']); ?>
+							</a>
+						<?php endif;
+						
+						// Purple button
+						$purple_button = docs_theme_get_purple_button();
+						if ($purple_button) : ?>
+							<a href="<?php echo esc_url($purple_button['url']); ?>" class="header-button header-button--purple" target="_blank" rel="noopener noreferrer">
+								<?php echo esc_html($purple_button['label']); ?>
+							</a>
+						<?php endif; ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</header>

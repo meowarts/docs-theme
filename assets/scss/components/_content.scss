@@ -1,6 +1,20 @@
 // Content Component
 // Main content area typography and styles
 
+.entry-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+  
+  .docs-page-meta {
+    margin-top: 0;
+    margin-left: auto;
+    font-size: var(--font-size-sm);
+    opacity: 1; // Full opacity to see the colors clearly
+  }
+}
+
 .entry-title {
   @include heading-base;
   margin: 0;
@@ -8,6 +22,10 @@
   font-weight: 700;
   line-height: var(--line-height-tight);
   color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .entry-content {
@@ -172,7 +190,8 @@
   }
   
   // Tables
-  table {
+  table,
+  .wp-block-table table {
     width: 100%;
     margin-bottom: var(--spacing-xl);
     border-collapse: collapse;
@@ -187,6 +206,26 @@
       background-color: var(--color-widget-bg);
       font-weight: 600;
     }
+    
+    // Alternating row backgrounds
+    tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    
+    // Hover effect
+    tbody tr {
+      transition: background-color $transition-fast;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.04);
+      }
+    }
+  }
+  
+  // WordPress block table wrapper
+  .wp-block-table {
+    margin-bottom: var(--spacing-xl);
+    overflow-x: auto;
   }
   
   // Code blocks
@@ -245,13 +284,14 @@
     transition: all $transition-fast;
     
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       background-color: var(--color-background);
       
       .docs-page-card-arrow {
-        opacity: 1;
-        transform: translateX(0);
+        opacity: 0.8;
+        transform: translateX(2px);
+        color: var(--color-accent);
       }
     }
     
@@ -289,10 +329,10 @@
     
     .docs-page-card-arrow {
       margin-left: var(--spacing-md);
-      color: var(--color-secondary);
+      color: var(--color-muted);
       flex-shrink: 0;
-      opacity: 0.5;
-      transform: translateX(-4px);
+      opacity: 0.4;
+      transform: translateX(-2px);
       transition: all $transition-fast;
     }
   }

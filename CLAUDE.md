@@ -6,7 +6,7 @@ Docs Theme is a straightforward, classic WordPress theme designed specifically f
 
 **Author**: Meow Apps  
 **Website**: https://meowapps.com  
-**Version**: 1.2.2  
+**Version**: 1.2.10  
 **Requires**: WordPress 6.0+, PHP 7.4+
 
 ## Key Features
@@ -15,6 +15,10 @@ Docs Theme is a straightforward, classic WordPress theme designed specifically f
 - **Page Hierarchy Support**: Child pages shown with expandable toggles
 - **Page Categories**: Organize pages into categories (custom taxonomy)
 - **Auto Table of Contents**: Generates TOC from page headings (H2, H3, H4)
+- **Global Search**: Press Ctrl/Cmd+K to search across all documentation
+- **Reading Time**: Shows estimated reading time for each page
+- **Last Updated**: Shows when pages were last modified (with relative time)
+- **Breadcrumbs**: Navigation path shown above page content
 - **Dark Theme**: Professional dark design optimized for documentation
 - **Zero Configuration**: Works immediately after activation
 - **Clean & Simple**: No complex settings or page builders needed
@@ -94,10 +98,13 @@ The right sidebar automatically:
 
 ### Interactive Features
 
+- **Global Search**: Press Cmd/Ctrl + K to search all documentation
 - **Copy Code Button**: Hover over code blocks to copy
-- **Search Shortcut**: Press Cmd/Ctrl + K to focus search
 - **Collapsible Navigation**: Click chevrons to expand/collapse
 - **Smooth Scrolling**: All anchor links scroll smoothly
+- **Reading Time Badges**: Shows estimated time to read each page
+- **Last Updated Info**: Relative time display (e.g., "5 days ago")
+- **Breadcrumb Navigation**: Shows current location in site hierarchy
 
 ## Styling Details
 
@@ -197,45 +204,45 @@ The theme uses Sass for CSS development:
 # Install dependencies
 npm install
 
-# Build CSS once
+# Build minified CSS
 npm run build
-
-# Watch for changes during development
-npm run watch
 ```
 
 ### Deployment
 
-The theme uses a unified deployment script (`deploy.js`) that handles both version bumping and deployment via SFTP.
+The theme uses a streamlined deployment system with automatic date-based versioning.
 
 **Setup (one-time)**:
 1. Copy `.env.example` to `.env`
 2. Fill in SFTP credentials in `.env`
 
-**Deployment Commands**:
-- `npm run deploy` - Deploy current version without bumping
-- `npm run deploy:patch` - Bump patch version (1.2.3 → 1.2.4) and deploy
-- `npm run deploy:minor` - Bump minor version (1.2.3 → 1.3.0) and deploy  
-- `npm run deploy:major` - Bump major version (1.2.3 → 2.0.0) and deploy
+**Commands**:
+- `npm run build` - Build minified CSS
+- `npm run deploy` - Deploy with automatic version increment
 
-**Version-only Commands**:
-- `npm run version:patch` - Only bump patch version (no deployment)
-- `npm run version:minor` - Only bump minor version (no deployment)
-- `npm run version:major` - Only bump major version (no deployment)
+**Version Format**:
+The theme uses date-based versioning: `YY.M.N`
+- `25` = Year 2025
+- `6` = Month 6 (June)
+- `1` = Deployment #1 in June
+
+Each deployment automatically increments the deployment counter.
 
 **Workflow**:
 1. Make your changes locally
-2. Deploy with version bump: `npm run deploy:patch`
-3. Commit changes: `git add . && git commit -m "Deploy version X.X.X"`
-4. Push to GitHub: `git push`
+2. Test with: `npm run build`
+3. Deploy: `npm run deploy`
+4. Commit changes: `git add . && git commit -m "Deploy version X.X.X"`
+5. Push to GitHub: `git push`
 
 **Technical Details**:
-- The `deploy.js` script combines version bumping and deployment
-- Updates version in `style.css`, `assets/scss/theme-header.scss`, and `package.json`
+- Theme loads `style.min.css` (minified) for better performance
+- The `deploy.js` script automatically increments version
+- Updates version in `assets/scss/theme-header.scss`, `package.json`, and `style.min.css`
 - Uses `sshpass` for SFTP authentication
 - Excludes development files from deployment (node_modules, SCSS, etc.)
 - Creates temporary `deploy/` directory that gets cleaned up after upload
-- Automatically rebuilds CSS after version bump via `npm run build`
+- Version history tracked in `.version-history.json` (git ignored)
 
 ### SCSS Structure
 ```

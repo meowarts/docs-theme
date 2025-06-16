@@ -18,3 +18,7 @@ require_once get_template_directory() . '/inc/features/block-styles.php';
 require_once get_template_directory() . '/inc/features/page-excerpts.php';
 require_once get_template_directory() . '/inc/features/page-emoticons.php';
 require_once get_template_directory() . '/inc/features/admin-category-menu.php';
+require_once get_template_directory() . '/inc/features/theme-settings.php';
+require_once get_template_directory() . '/inc/features/breadcrumbs.php';
+require_once get_template_directory() . '/inc/features/reading-time.php';
+require_once get_template_directory() . '/inc/features/last-updated.php';

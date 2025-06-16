@@ -1,0 +1,128 @@
+// Page Meta Information Styles
+
+.docs-page-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  margin-left: auto; // Push to the right side
+}
+
+// Badges wrapper
+.docs-badges-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0; // No gap between badges
+  flex-shrink: 0; // Prevent badges from shrinking
+}
+
+// Reading Time Badge (next to title)
+.docs-reading-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: 20px 0 0 20px; // Rounded left side only
+  border-right: 1px solid #4fb9ec29; // Separator border with specific blue color
+  
+  svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.8;
+  }
+}
+
+// Last Updated Badge (next to title)
+.docs-last-updated-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: 0 20px 20px 0; // Rounded right side only
+  
+  svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.8;
+  }
+  
+  // Color variations based on age
+  &.last-updated--green {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+  
+  &.last-updated--red {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+}
+
+// When only one badge is shown, make it fully rounded
+.docs-badges-wrapper {
+  .docs-reading-time-badge:only-child {
+    border-radius: 20px;
+    border-right: none; // Remove separator when alone
+  }
+  
+  .docs-last-updated-badge:only-child {
+    border-radius: 20px;
+  }
+}
+
+// Reading Time
+.docs-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  
+  &__icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+  }
+  
+  &__text {
+    font-weight: 500;
+  }
+}
+
+// Last Updated (for future use if needed)
+.docs-last-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  
+  &__icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+  }
+  
+  &__text {
+    font-weight: 500;
+    
+    time {
+      font-weight: 400;
+    }
+  }
+}
+
+// Responsive
+@include mobile {
+  .docs-page-meta {
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-xs);
+  }
+}

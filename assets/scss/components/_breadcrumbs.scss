@@ -1,0 +1,53 @@
+// Breadcrumb Navigation Styles
+
+.docs-breadcrumbs-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+.docs-breadcrumbs {
+  flex: 1;
+  
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--font-size-sm);
+    line-height: 1;
+  }
+  
+  &__item {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    
+    // Add separator after each item except last
+    &:not(:last-child)::after {
+      content: "›";
+      margin-left: var(--spacing-xs);
+      color: var(--color-muted);
+      opacity: 0.5;
+    }
+  }
+  
+  &__link {
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color $transition-fast;
+    
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+  
+  &__current {
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+}

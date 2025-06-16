@@ -5,18 +5,8 @@
   "author": "Meow Apps",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "build:css": "sass assets/scss/style.scss:assets/css/style.css --style=expanded",
-    "build:css:min": "sass assets/scss/style.scss:assets/css/style.min.css --style=compressed",
-    "build:main": "sass assets/scss/theme-header.scss:style.css --style=expanded",
-    "watch:css": "sass assets/scss/style.scss:assets/css/style.css --style=expanded --watch",
-    "build": "npm run build:css && npm run build:css:min && npm run build:main",
-    "deploy": "node deploy.js deploy",
-    "deploy:patch": "node deploy.js patch",
-    "deploy:minor": "node deploy.js minor",
-    "deploy:major": "node deploy.js major",
-    "version:patch": "node deploy.js version patch",
-    "version:minor": "node deploy.js version minor",
-    "version:major": "node deploy.js version major"
+    "build": "node build.js",
+    "deploy": "node deploy.js"
   },
   "devDependencies": {
     "sass": "^1.69.5"

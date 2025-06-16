@@ -3,5 +3,5 @@ node_modules/
 *.log
 .env
 deploy/
-node_modules
-node_modules
+.version-history.json
+build.js

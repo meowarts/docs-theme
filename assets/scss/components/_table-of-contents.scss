@@ -34,17 +34,24 @@
 .docs-toc__item {
   margin-bottom: var(--spacing-xs);
   
+  &--h1 {
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+  }
+  
   &--h2 {
     font-weight: 500;
   }
   
   &--h3 {
     font-size: calc(var(--font-size-base) * 0.9375);
+    padding-left: var(--spacing-md);
   }
   
   &--h4 {
     font-size: var(--font-size-sm);
     opacity: 0.9;
+    padding-left: calc(var(--spacing-md) * 2);
   }
 }
 

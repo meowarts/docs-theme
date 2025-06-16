@@ -84,10 +84,22 @@
 				
 				e.preventDefault();
 				
-				target.scrollIntoView({
-					behavior: 'smooth',
-					block: 'start'
-				});
+				// For page title, scroll to top
+				if (target.id === 'page-title') {
+					window.scrollTo({
+						top: 0,
+						behavior: 'smooth'
+					});
+				} else {
+					// For other headings, scroll with offset
+					const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+					const offsetPosition = targetPosition - 20; // 20px offset for better visibility
+					
+					window.scrollTo({
+						top: offsetPosition,
+						behavior: 'smooth'
+					});
+				}
 				
 				// Update URL without jumping
 				if (history.pushState) {
@@ -135,21 +147,37 @@
 	function initTableOfContents() {
 		const tocContainer = document.getElementById('table-of-contents');
 		const content = document.querySelector('.entry-content');
+		const pageTitle = document.querySelector('.entry-title');
 		
 		if (!tocContainer || !content) return;
 		
 		// Find all headings
 		const headings = content.querySelectorAll('h2, h3, h4');
 		
-		if (headings.length === 0) {
-			tocContainer.innerHTML = '<p class="no-headings">No headings found</p>';
-			return;
-		}
-		
 		// Build TOC
 		const tocList = document.createElement('ul');
 		tocList.className = 'docs-toc__list';
 		
+		// Add page title as first item
+		if (pageTitle) {
+			// Ensure title has an ID
+			if (!pageTitle.id) {
+				pageTitle.id = 'page-title';
+			}
+			
+			const titleItem = document.createElement('li');
+			titleItem.className = 'docs-toc__item docs-toc__item--h1';
+			
+			const titleLink = document.createElement('a');
+			titleLink.href = '#' + pageTitle.id;
+			titleLink.className = 'docs-toc__link';
+			titleLink.textContent = pageTitle.textContent;
+			
+			titleItem.appendChild(titleLink);
+			tocList.appendChild(titleItem);
+		}
+		
+		// Add other headings
 		headings.forEach(function(heading) {
 			// Ensure heading has an ID
 			if (!heading.id) {
@@ -176,31 +204,39 @@
 		
 		tocContainer.appendChild(tocList);
 		
+		// Create array with all headings including title
+		const allHeadings = pageTitle ? [pageTitle, ...headings] : [...headings];
+		
 		// Update active state on scroll
 		let scrollTimer;
 		window.addEventListener('scroll', function() {
 			if (scrollTimer) clearTimeout(scrollTimer);
 			scrollTimer = setTimeout(function() {
-				updateActiveTocItem(headings);
+				updateActiveTocItem(allHeadings);
 			}, 10);
 		});
 		
 		// Initial update
-		updateActiveTocItem(headings);
+		updateActiveTocItem(allHeadings);
 	}
 
 	/**
 	 * Update active TOC item based on scroll position
 	 */
 	function updateActiveTocItem(headings) {
-		const scrollPosition = window.scrollY + 100;
+		const scrollPosition = window.scrollY;
 		let activeHeading = null;
 		
-		// Find current active heading
-		for (let i = headings.length - 1; i >= 0; i--) {
-			if (scrollPosition >= headings[i].offsetTop) {
-				activeHeading = headings[i];
-				break;
+		// Special handling for page title - if we're near top of page
+		if (scrollPosition < 200 && headings[0] && headings[0].id === 'page-title') {
+			activeHeading = headings[0];
+		} else {
+			// Find current active heading
+			for (let i = headings.length - 1; i >= 0; i--) {
+				if (scrollPosition >= headings[i].offsetTop - 100) {
+					activeHeading = headings[i];
+					break;
+				}
 			}
 		}
 		

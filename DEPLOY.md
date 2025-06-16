@@ -9,8 +9,7 @@ npm install
 
 ### Development Commands
 ```bash
-npm run build       # Build CSS files
-npm run watch:css   # Watch SCSS for changes
+npm run build       # Build minified CSS
 ```
 
 ## Deployment Setup
@@ -23,43 +22,49 @@ npm run watch:css   # Watch SCSS for changes
    SFTP_PORT=22
    SFTP_USER=your-username
    SFTP_PASSWORD=your-password
-   SFTP_REMOTE_PATH=/wp-content/themes/docs-theme
    ```
 
-## Deployment Commands
+## Build & Deploy
 
-### Deploy with Version Bump (Recommended)
+### Build CSS
 ```bash
-npm run deploy:patch   # Bug fixes (1.2.3 → 1.2.4)
-npm run deploy:minor   # New features (1.2.3 → 1.3.0)  
-npm run deploy:major   # Breaking changes (1.2.3 → 2.0.0)
+npm run build       # Compile SCSS to minified CSS
 ```
 
-### Deploy Without Version Bump
+This creates `style.min.css` which is loaded by the theme for optimal performance.
+
+### Deploy
 ```bash
-npm run deploy        # Deploy current version
+npm run deploy      # Deploy with automatic version increment
 ```
 
-### Version Bump Only (No Deployment)
-```bash
-npm run version:patch  # Just bump version
-npm run version:minor
-npm run version:major
-```
+The deployment automatically:
+- Increments version using date-based format (YY.M.N)
+- Builds CSS with new version
+- Uploads to your WordPress site via SFTP
+- Cleans up temporary files
+
+## Version Format
+The theme uses date-based versioning:
+- `25.6.1` = Year 2025, Month 6 (June), Deployment #1
+- `25.6.2` = Year 2025, Month 6 (June), Deployment #2
+- `25.7.1` = Year 2025, Month 7 (July), Deployment #1
+
+Each deployment automatically increments the deployment counter for the current month.
 
 ## Typical Workflow
 1. Make changes to theme files
 2. Test locally
-3. Deploy with version bump: `npm run deploy:patch`
+3. Deploy: `npm run deploy`
 4. Commit to git: `git add . && git commit -m "Deploy version X.X.X"`
 5. Push: `git push`
 
 ## Technical Details
-- The deploy script automatically updates version in:
-  - `style.css` (WordPress theme header)
-  - `assets/scss/theme-header.scss` (source file)
-  - `package.json` (npm package version)
-- CSS is automatically rebuilt after version bumping
+- Theme loads `style.min.css` (minified) instead of `style.css`
+- Version is updated in:
+  - `assets/scss/theme-header.scss` (source)
+  - `package.json` (npm package)
+  - `style.min.css` (compiled output with theme header)
 - Development files (SCSS, node_modules, etc.) are excluded from deployment
-- Creates temporary `deploy/` directory that gets cleaned up after upload
+- Deployment history is tracked in `.version-history.json` (git ignored)
 - Uses `sshpass` for SFTP authentication
