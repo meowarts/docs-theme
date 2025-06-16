@@ -433,6 +433,16 @@
                     }
                     parent = parent.parentElement?.closest('.page-item');
                 }
+                
+                // Also expand this item's children if it has any
+                const childrenList = pageItem.querySelector('.children');
+                if (childrenList) {
+                    childrenList.style.display = 'block';
+                    const toggle = pageItem.querySelector('.toggle-children');
+                    if (toggle) {
+                        toggle.setAttribute('aria-expanded', 'true');
+                    }
+                }
             }
         }
     }
