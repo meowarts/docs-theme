@@ -187,6 +187,18 @@
     p:last-child {
       margin-bottom: 0;
     }
+    
+    // Links in blockquotes should match blockquote text color
+    a {
+      color: inherit;
+      border-bottom: 2.5px solid currentColor;
+      opacity: 0.9;
+      
+      &:hover {
+        opacity: 1;
+        border-bottom-color: currentColor;
+      }
+    }
   }
   
   // Tables
