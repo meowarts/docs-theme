@@ -22,3 +22,4 @@ require_once get_template_directory() . '/inc/features/theme-settings.php';
 require_once get_template_directory() . '/inc/features/breadcrumbs.php';
 require_once get_template_directory() . '/inc/features/reading-time.php';
 require_once get_template_directory() . '/inc/features/last-updated.php';
+require_once get_template_directory() . '/inc/features/async-navigation.php';

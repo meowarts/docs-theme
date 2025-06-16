@@ -323,5 +323,11 @@
 			element.setAttribute('aria-busy', 'false');
 		}
 	};
+	
+	// Expose functions for async navigation
+	window.initCopyCodeButtons = initCopyCodeButtons;
+	window.initSmoothAnchors = initSmoothAnchors;
+	window.initTableOfContents = initTableOfContents;
+	window.initHighlightJS = initHighlightJS;
 
 })();

@@ -6,6 +6,7 @@
   justify-content: space-between;
   margin-bottom: var(--spacing-xl);
   gap: var(--spacing-lg);
+  min-height: 32px; // Ensure consistent height even without badges
 }
 
 .docs-breadcrumbs {
