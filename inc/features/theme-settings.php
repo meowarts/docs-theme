@@ -33,10 +33,8 @@ function docs_theme_register_settings() {
     register_setting('docs_theme_settings', 'docs_theme_show_breadcrumbs');
     register_setting('docs_theme_settings', 'docs_theme_show_last_updated');
     register_setting('docs_theme_settings', 'docs_theme_show_reading_time');
-    register_setting('docs_theme_settings', 'docs_theme_green_button_label');
-    register_setting('docs_theme_settings', 'docs_theme_green_button_url');
-    register_setting('docs_theme_settings', 'docs_theme_purple_button_label');
-    register_setting('docs_theme_settings', 'docs_theme_purple_button_url');
+    // Register sidebar button sections
+    register_setting('docs_theme_settings', 'docs_theme_sidebar_button_sections');
     
     // Add settings sections
     add_settings_section(
@@ -47,9 +45,9 @@ function docs_theme_register_settings() {
     );
     
     add_settings_section(
-        'docs_theme_buttons_section',
-        __('Header Buttons', 'docs-theme'),
-        'docs_theme_buttons_section_callback',
+        'docs_theme_sidebar_buttons_section',
+        __('Sidebar Buttons', 'docs-theme'),
+        'docs_theme_sidebar_buttons_section_callback',
         'docs_theme_settings'
     );
     
@@ -78,38 +76,13 @@ function docs_theme_register_settings() {
         'docs_theme_display_section'
     );
     
-    // Green button fields
+    // Sidebar button sections field
     add_settings_field(
-        'docs_theme_green_button_label',
-        __('Green Button Label', 'docs-theme'),
-        'docs_theme_green_button_label_callback',
+        'docs_theme_sidebar_button_sections',
+        __('Button Sections', 'docs-theme'),
+        'docs_theme_sidebar_button_sections_callback',
         'docs_theme_settings',
-        'docs_theme_buttons_section'
-    );
-    
-    add_settings_field(
-        'docs_theme_green_button_url',
-        __('Green Button URL', 'docs-theme'),
-        'docs_theme_green_button_url_callback',
-        'docs_theme_settings',
-        'docs_theme_buttons_section'
-    );
-    
-    // Purple button fields
-    add_settings_field(
-        'docs_theme_purple_button_label',
-        __('Purple Button Label', 'docs-theme'),
-        'docs_theme_purple_button_label_callback',
-        'docs_theme_settings',
-        'docs_theme_buttons_section'
-    );
-    
-    add_settings_field(
-        'docs_theme_purple_button_url',
-        __('Purple Button URL', 'docs-theme'),
-        'docs_theme_purple_button_url_callback',
-        'docs_theme_settings',
-        'docs_theme_buttons_section'
+        'docs_theme_sidebar_buttons_section'
     );
 }
 add_action('admin_init', 'docs_theme_register_settings');
@@ -121,8 +94,8 @@ function docs_theme_display_section_callback() {
     echo '<p>' . __('Configure which elements to display on your documentation pages.', 'docs-theme') . '</p>';
 }
 
-function docs_theme_buttons_section_callback() {
-    echo '<p>' . __('Add custom buttons to the header. Both label and URL are required for a button to appear.', 'docs-theme') . '</p>';
+function docs_theme_sidebar_buttons_section_callback() {
+    echo '<p>' . __('Add button sections to the sidebar. Each section can have up to two buttons.', 'docs-theme') . '</p>';
 }
 
 /**
@@ -211,58 +184,165 @@ function docs_theme_show_reading_time() {
     return get_option('docs_theme_show_reading_time', '1') === '1';
 }
 
-// Button field callbacks
-function docs_theme_green_button_label_callback() {
-    $value = get_option('docs_theme_green_button_label', '');
+// Sidebar button sections callback
+function docs_theme_sidebar_button_sections_callback() {
+    $sections = get_option('docs_theme_sidebar_button_sections', array());
+    if (!is_array($sections)) {
+        $sections = array();
+    }
     ?>
-    <input type="text" name="docs_theme_green_button_label" value="<?php echo esc_attr($value); ?>" class="regular-text" />
-    <p class="description"><?php _e('Label for the green button (e.g., "Free Version")', 'docs-theme'); ?></p>
-    <?php
-}
-
-function docs_theme_green_button_url_callback() {
-    $value = get_option('docs_theme_green_button_url', '');
-    ?>
-    <input type="url" name="docs_theme_green_button_url" value="<?php echo esc_attr($value); ?>" class="regular-text" />
-    <p class="description"><?php _e('URL for the green button', 'docs-theme'); ?></p>
-    <?php
-}
-
-function docs_theme_purple_button_label_callback() {
-    $value = get_option('docs_theme_purple_button_label', '');
-    ?>
-    <input type="text" name="docs_theme_purple_button_label" value="<?php echo esc_attr($value); ?>" class="regular-text" />
-    <p class="description"><?php _e('Label for the purple button (e.g., "Pro Version")', 'docs-theme'); ?></p>
-    <?php
-}
-
-function docs_theme_purple_button_url_callback() {
-    $value = get_option('docs_theme_purple_button_url', '');
-    ?>
-    <input type="url" name="docs_theme_purple_button_url" value="<?php echo esc_attr($value); ?>" class="regular-text" />
-    <p class="description"><?php _e('URL for the purple button', 'docs-theme'); ?></p>
-    <?php
-}
-
-// Helper functions to get button settings
-function docs_theme_get_green_button() {
-    $label = get_option('docs_theme_green_button_label', '');
-    $url = get_option('docs_theme_green_button_url', '');
+    <div id="docs-theme-button-sections">
+        <div class="button-sections-container">
+            <?php if (!empty($sections)) : ?>
+                <?php foreach ($sections as $index => $section) : ?>
+                    <div class="button-section" data-index="<?php echo esc_attr($index); ?>">
+                        <div class="section-header">
+                            <h4>Section <?php echo $index + 1; ?></h4>
+                            <button type="button" class="button button-small remove-section" data-index="<?php echo esc_attr($index); ?>"><?php _e('Remove', 'docs-theme'); ?></button>
+                        </div>
+                        <table class="form-table">
+                            <tr>
+                                <th><label><?php _e('Section Name', 'docs-theme'); ?></label></th>
+                                <td>
+                                    <input type="text" name="docs_theme_sidebar_button_sections[<?php echo $index; ?>][name]" value="<?php echo esc_attr($section['name'] ?? ''); ?>" class="regular-text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php _e('Primary Button Label', 'docs-theme'); ?></label></th>
+                                <td>
+                                    <input type="text" name="docs_theme_sidebar_button_sections[<?php echo $index; ?>][primary_label]" value="<?php echo esc_attr($section['primary_label'] ?? ''); ?>" class="regular-text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php _e('Primary Button URL', 'docs-theme'); ?></label></th>
+                                <td>
+                                    <input type="url" name="docs_theme_sidebar_button_sections[<?php echo $index; ?>][primary_url]" value="<?php echo esc_attr($section['primary_url'] ?? ''); ?>" class="regular-text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php _e('Secondary Button Label', 'docs-theme'); ?></label></th>
+                                <td>
+                                    <input type="text" name="docs_theme_sidebar_button_sections[<?php echo $index; ?>][secondary_label]" value="<?php echo esc_attr($section['secondary_label'] ?? ''); ?>" class="regular-text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label><?php _e('Secondary Button URL', 'docs-theme'); ?></label></th>
+                                <td>
+                                    <input type="url" name="docs_theme_sidebar_button_sections[<?php echo $index; ?>][secondary_url]" value="<?php echo esc_attr($section['secondary_url'] ?? ''); ?>" class="regular-text" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <button type="button" class="button" id="add-button-section"><?php _e('Add New Section', 'docs-theme'); ?></button>
+    </div>
     
-    if (!empty($label) && !empty($url)) {
-        return array('label' => $label, 'url' => $url);
+    <style>
+        .button-section {
+            background: #f6f7f7;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #dcdcde;
+            border-radius: 4px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .section-header h4 {
+            margin: 0;
+        }
+        .button-section .form-table {
+            margin-top: 0;
+        }
+        .button-section .form-table th {
+            width: 180px;
+            padding-left: 0;
+        }
+    </style>
+    
+    <script>
+    (function($) {
+        if (!$) {
+            console.error('jQuery not available for Docs Theme settings');
+            return;
+        }
+        var sectionIndex = <?php echo count($sections); ?>;
+        
+        $('#add-button-section').on('click', function() {
+            var newSection = `
+                <div class="button-section" data-index="${sectionIndex}">
+                    <div class="section-header">
+                        <h4>Section ${sectionIndex + 1}</h4>
+                        <button type="button" class="button button-small remove-section" data-index="${sectionIndex}">Remove</button>
+                    </div>
+                    <table class="form-table">
+                        <tr>
+                            <th><label>Section Name</label></th>
+                            <td>
+                                <input type="text" name="docs_theme_sidebar_button_sections[${sectionIndex}][name]" value="" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label>Primary Button Label</label></th>
+                            <td>
+                                <input type="text" name="docs_theme_sidebar_button_sections[${sectionIndex}][primary_label]" value="" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label>Primary Button URL</label></th>
+                            <td>
+                                <input type="url" name="docs_theme_sidebar_button_sections[${sectionIndex}][primary_url]" value="" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label>Secondary Button Label</label></th>
+                            <td>
+                                <input type="text" name="docs_theme_sidebar_button_sections[${sectionIndex}][secondary_label]" value="" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label>Secondary Button URL</label></th>
+                            <td>
+                                <input type="url" name="docs_theme_sidebar_button_sections[${sectionIndex}][secondary_url]" value="" class="regular-text" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+            
+            $('.button-sections-container').append(newSection);
+            sectionIndex++;
+        });
+        
+        $(document).on('click', '.remove-section', function() {
+            $(this).closest('.button-section').remove();
+        });
+    })(jQuery);
+    </script>
+    <?php
+}
+
+// Helper function to get sidebar button sections
+function docs_theme_get_sidebar_button_sections() {
+    $sections = get_option('docs_theme_sidebar_button_sections', array());
+    if (!is_array($sections)) {
+        return array();
     }
     
-    return false;
-}
-
-function docs_theme_get_purple_button() {
-    $label = get_option('docs_theme_purple_button_label', '');
-    $url = get_option('docs_theme_purple_button_url', '');
-    
-    if (!empty($label) && !empty($url)) {
-        return array('label' => $label, 'url' => $url);
+    // Filter out sections without required data
+    $valid_sections = array();
+    foreach ($sections as $section) {
+        if (!empty($section['name']) && 
+            ((!empty($section['primary_label']) && !empty($section['primary_url'])) ||
+             (!empty($section['secondary_label']) && !empty($section['secondary_url'])))) {
+            $valid_sections[] = $section;
+        }
     }
     
-    return false;
+    return $valid_sections;
 }

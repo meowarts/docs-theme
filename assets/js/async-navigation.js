@@ -325,50 +325,102 @@
             }
         }
 
-        // Handle table of contents visibility
+        // Handle table of contents and sidebar visibility
         let tocSidebar = document.querySelector('.docs-sidebar-right');
         
-        if (data.show_toc) {
-            // Show TOC if it should be visible
-            if (!tocSidebar) {
-                // Create TOC sidebar if it doesn't exist
-                const newTocSidebar = document.createElement('aside');
-                newTocSidebar.className = 'docs-sidebar-right';
-                newTocSidebar.innerHTML = `
-                    <h4 class="toc-title">Table of contents</h4>
-                    <nav class="docs-toc" id="table-of-contents"></nav>
-                `;
-                // Start with opacity 0 for fade-in effect
-                newTocSidebar.style.opacity = '0';
-                newTocSidebar.style.transform = 'translateY(10px)';
-                newTocSidebar.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-                
-                const mainContent = document.querySelector('.docs-content');
-                if (mainContent && mainContent.parentNode) {
-                    mainContent.parentNode.insertBefore(newTocSidebar, mainContent.nextSibling);
-                    tocSidebar = newTocSidebar; // Update reference
-                }
-            } else {
-                // Make sure it's visible
+        // Don't show any sidebar on pages with child page cards
+        if (data.has_children) {
+            // Hide sidebar if it exists
+            if (tocSidebar) {
+                tocSidebar.style.display = 'none';
+            }
+        } else {
+            // Check if we actually have headings for the ToC (excluding page title)
+            const contentHeadings = data.headings || [];
+            const hasContentHeadings = contentHeadings.length > 0;
+            
+            // Override show_toc if there are no headings
+            const shouldShowToc = data.show_toc && hasContentHeadings;
+            const hasButtons = data.sidebar_buttons_html && data.sidebar_buttons_html.trim() !== '';
+            
+            // Show sidebar if we have ToC or buttons
+            if (shouldShowToc || hasButtons) {
+                if (!tocSidebar) {
+                    // Create sidebar if it doesn't exist
+                    const newTocSidebar = document.createElement('aside');
+                    newTocSidebar.className = 'docs-sidebar-right';
+                    let sidebarContent = '';
+                    
+                    // Add ToC section if needed
+                    if (shouldShowToc) {
+                        sidebarContent += `
+                            <div class="sidebar-toc-section">
+                                <h4 class="toc-title">Table of contents</h4>
+                                <nav class="docs-toc" id="table-of-contents"></nav>
+                            </div>
+                        `;
+                    }
+                    
+                    // Add sidebar buttons if they exist
+                    if (hasButtons) {
+                        sidebarContent += data.sidebar_buttons_html;
+                    }
+                    
+                    newTocSidebar.innerHTML = sidebarContent;
+                    
+                    // Start with opacity 0 for fade-in effect
+                    newTocSidebar.style.opacity = '0';
+                    newTocSidebar.style.transform = 'translateY(10px)';
+                    newTocSidebar.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                    
+                    const mainContent = document.querySelector('.site-main');
+                    if (mainContent && mainContent.parentNode) {
+                        mainContent.parentNode.insertBefore(newTocSidebar, mainContent.nextSibling);
+                        tocSidebar = newTocSidebar; // Update reference
+                    }
+                } else {
+                // Update existing sidebar content
                 tocSidebar.style.display = '';
-                // Reset opacity in case it was hidden
+                
+                // Update ToC visibility
+                const tocSection = tocSidebar.querySelector('.sidebar-toc-section');
+                if (shouldShowToc) {
+                    if (!tocSection) {
+                        // Add ToC section if it doesn't exist
+                        const newTocSection = document.createElement('div');
+                        newTocSection.className = 'sidebar-toc-section';
+                        newTocSection.innerHTML = `
+                            <h4 class="toc-title">Table of contents</h4>
+                            <nav class="docs-toc" id="table-of-contents"></nav>
+                        `;
+                        tocSidebar.insertBefore(newTocSection, tocSidebar.firstChild);
+                    } else {
+                        tocSection.style.display = '';
+                    }
+                } else if (tocSection) {
+                    tocSection.style.display = 'none';
+                }
+                
+                // Reset opacity for fade-in
                 tocSidebar.style.opacity = '0';
                 tocSidebar.style.transform = 'translateY(10px)';
             }
             
-            // Always rebuild ToC from scratch using the same function as initial load
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-                if (window.initTableOfContents) {
-                    window.initTableOfContents();
-                }
-            }, 50);
+            // Rebuild ToC if needed
+            if (shouldShowToc) {
+                setTimeout(() => {
+                    if (window.initTableOfContents) {
+                        window.initTableOfContents();
+                    }
+                }, 50);
+            }
         } else {
-            // Hide TOC if it shouldn't be visible
+            // Hide sidebar only if we have neither ToC nor buttons
             if (tocSidebar) {
                 tocSidebar.style.display = 'none';
             }
         }
+        } // End if !data.has_children
 
         // Update document title
         const siteName = document.title.split(' – ').pop();
@@ -387,8 +439,11 @@
             document.querySelector(config.subtitleSelector)
         ];
         
-        // Only include TOC sidebar in fade-in if it's visible
-        if (data.show_toc) {
+        // Only include TOC sidebar in fade-in if it's visible and has content
+        const contentHeadingsForFade = data.headings || [];
+        const hasContentHeadingsForFade = contentHeadingsForFade.length > 0;
+        
+        if (data.show_toc && hasContentHeadingsForFade) {
             // Re-query to make sure we get the newly created sidebar
             const tocSidebarElement = document.querySelector('.docs-sidebar-right');
             if (tocSidebarElement) {

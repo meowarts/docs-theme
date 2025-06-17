@@ -151,16 +151,53 @@ get_header(); ?>
 </main>
 
 <?php 
-// Only show table of contents if the page has substantial content or no child pages
+// Check if this page has child pages (shows cards)
 $has_child_pages = ! empty( $child_pages );
-$content_length = strlen( strip_tags( get_the_content() ) );
-$show_toc = ! $has_child_pages || $content_length > 500;
 
-if ( $show_toc ) : ?>
+// Don't show any sidebar on pages with child page cards
+if ( ! $has_child_pages ) :
+	// Get sidebar button sections
+	$button_sections = docs_theme_get_sidebar_button_sections();
+	
+	// Only show table of contents if the page has substantial content and actual headings
+	$content_length = strlen( strip_tags( get_the_content() ) );
+	$has_headings = function_exists( '\DocsTheme\content_has_headings' ) ? \DocsTheme\content_has_headings( get_the_content() ) : false;
+	$show_toc = $content_length > 500 && $has_headings;
+	
+	// Show sidebar if we have ToC or buttons
+	if ( $show_toc || !empty($button_sections) ) : ?>
 <aside class="docs-sidebar-right">
-	<h4 class="toc-title"><?php esc_html_e( 'Table of contents', 'docs-theme' ); ?></h4>
-	<nav class="docs-toc" id="table-of-contents"></nav>
+	<?php if ( $show_toc ) : ?>
+	<div class="sidebar-toc-section">
+		<h4 class="toc-title"><?php esc_html_e( 'Table of contents', 'docs-theme' ); ?></h4>
+		<nav class="docs-toc" id="table-of-contents"></nav>
+	</div>
+	<?php endif; ?>
+	
+	<?php
+	// Display sidebar button sections
+	if (!empty($button_sections)) :
+		foreach ($button_sections as $section) : ?>
+			<div class="sidebar-button-section">
+				<h4 class="toc-title"><?php echo esc_html($section['name']); ?></h4>
+				<div class="sidebar-buttons">
+					<?php if (!empty($section['primary_label']) && !empty($section['primary_url'])) : ?>
+						<a href="<?php echo esc_url($section['primary_url']); ?>" class="sidebar-button sidebar-button--green" target="_blank" rel="noopener noreferrer">
+							<?php echo esc_html($section['primary_label']); ?>
+						</a>
+					<?php endif; ?>
+					
+					<?php if (!empty($section['secondary_label']) && !empty($section['secondary_url'])) : ?>
+						<a href="<?php echo esc_url($section['secondary_url']); ?>" class="sidebar-button sidebar-button--purple" target="_blank" rel="noopener noreferrer">
+							<?php echo esc_html($section['secondary_label']); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+			</div>
+		<?php endforeach;
+	endif; ?>
 </aside>
 <?php endif; ?>
+<?php endif; // End if ! $has_child_pages ?>
 
 <?php get_footer();

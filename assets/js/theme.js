@@ -215,6 +215,7 @@
 		const tocContainer = document.getElementById('table-of-contents');
 		const content = document.querySelector('.entry-content');
 		const pageTitle = document.querySelector('.entry-title');
+		const tocSidebar = document.querySelector('.docs-sidebar-right');
 		
 		if (!tocContainer || !content) return;
 		
@@ -232,6 +233,17 @@
 		
 		// Find all headings
 		const headings = content.querySelectorAll('h2, h3, h4');
+		
+		// Check if we should hide the ToC (only page title, no other headings)
+		const tocSection = document.querySelector('.sidebar-toc-section');
+		if (headings.length === 0 && tocSection) {
+			// Hide the ToC section if there are no headings
+			tocSection.style.display = 'none';
+			return;
+		} else if (tocSection) {
+			// Make sure it's visible if there are headings
+			tocSection.style.display = '';
+		}
 		
 		// Clear existing TOC content
 		tocContainer.innerHTML = '';
@@ -614,5 +626,6 @@
 	window.currentActiveHeading = currentActiveHeading;
 	window.lastKnownActiveHeading = lastKnownActiveHeading;
 	window.updateHeadingPositions = updateHeadingPositions;
+	window.findActiveHeadingFromPositions = findActiveHeadingFromPositions;
 
 })();

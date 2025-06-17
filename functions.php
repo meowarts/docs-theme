@@ -349,3 +349,11 @@ if ( ! is_admin() ) {
 	add_filter( 'style_loader_src', __NAMESPACE__ . '\\remove_version_query_strings', 9999 );
 	add_filter( 'script_loader_src', __NAMESPACE__ . '\\remove_version_query_strings', 9999 );
 }
+
+/**
+ * Check if content has headings (h2, h3, h4) for table of contents
+ */
+function content_has_headings( $content ) {
+	// Check for h2, h3, or h4 tags in the content
+	return preg_match( '/<h[2-4][^>]*>.*?<\/h[2-4]>/i', $content );
+}

@@ -233,7 +233,36 @@ function docs_theme_get_page_content($request) {
     // Determine if TOC should be shown
     $has_child_pages = !empty($full_child_pages);
     $content_length = strlen(strip_tags($content));
-    $show_toc = !$has_child_pages || $content_length > 500;
+    $has_headings = !empty($headings); // We already extracted headings above
+    $show_toc = (!$has_child_pages || $content_length > 500) && $has_headings;
+    
+    // Get sidebar button sections HTML
+    $sidebar_buttons_html = '';
+    if (function_exists('docs_theme_get_sidebar_button_sections')) {
+        $button_sections = docs_theme_get_sidebar_button_sections();
+        if (!empty($button_sections)) {
+            ob_start();
+            foreach ($button_sections as $section) : ?>
+                <div class="sidebar-button-section">
+                    <h4 class="toc-title"><?php echo esc_html($section['name']); ?></h4>
+                    <div class="sidebar-buttons">
+                        <?php if (!empty($section['primary_label']) && !empty($section['primary_url'])) : ?>
+                            <a href="<?php echo esc_url($section['primary_url']); ?>" class="sidebar-button sidebar-button--green" target="_blank" rel="noopener noreferrer">
+                                <?php echo esc_html($section['primary_label']); ?>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($section['secondary_label']) && !empty($section['secondary_url'])) : ?>
+                            <a href="<?php echo esc_url($section['secondary_url']); ?>" class="sidebar-button sidebar-button--purple" target="_blank" rel="noopener noreferrer">
+                                <?php echo esc_html($section['secondary_label']); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach;
+            $sidebar_buttons_html = ob_get_clean();
+        }
+    }
     
     // Build response
     $response = array(
@@ -247,6 +276,7 @@ function docs_theme_get_page_content($request) {
         'child_pages_html' => $child_pages_html,
         'has_children' => $has_child_pages,
         'show_toc' => $show_toc,
+        'sidebar_buttons_html' => $sidebar_buttons_html,
         'url' => get_permalink($page_id),
         'parent_id' => $page->post_parent,
     );
