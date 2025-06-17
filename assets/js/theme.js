@@ -75,8 +75,20 @@
 		const href = this.getAttribute('href');
 		if (href === '#') return;
 		
-		const target = document.querySelector(href);
-		if (!target) return;
+		// Check if this is a ToC link with an anchor
+		const anchorId = this.getAttribute('data-anchor-id');
+		let scrollTarget;
+		
+		if (anchorId) {
+			// Use the anchor element for ToC links
+			scrollTarget = document.getElementById(anchorId);
+		} else {
+			// Fallback to the actual target
+			scrollTarget = document.querySelector(href);
+		}
+		
+		const target = document.querySelector(href); // Still need the actual heading for active state
+		if (!scrollTarget || !target) return;
 		
 		e.preventDefault();
 		
@@ -86,9 +98,21 @@
 			// For page title, scroll to absolute top to show breadcrumbs
 			targetPosition = 0;
 		} else {
-			// For other headings, scroll with offset
-			const rect = target.getBoundingClientRect();
-			targetPosition = rect.top + window.pageYOffset - 80; // More offset for better visibility
+			// Use the anchor's position for scrolling
+			const rect = scrollTarget.getBoundingClientRect();
+			const absoluteTop = rect.top + window.pageYOffset;
+			const documentHeight = document.documentElement.scrollHeight;
+			const viewportHeight = window.innerHeight;
+			
+			// Check if this is one of the last headings that might not fit in viewport
+			const remainingSpace = documentHeight - absoluteTop;
+			if (remainingSpace < viewportHeight) {
+				// For last headings with little content, position them higher in viewport
+				targetPosition = Math.max(0, documentHeight - viewportHeight);
+			} else {
+				// Normal headings - the anchor is already 125px above the heading
+				targetPosition = absoluteTop;
+			}
 		}
 		
 		// Set flag to prevent updates during scroll
@@ -215,6 +239,9 @@
 		// Reset the active ToC tracking
 		currentActiveTocId = null;
 		
+		// Clean up any existing scroll anchors
+		document.querySelectorAll('.docs-toc-anchor').forEach(anchor => anchor.remove());
+		
 		// Build TOC
 		const tocList = document.createElement('ul');
 		tocList.className = 'docs-toc__list';
@@ -226,6 +253,13 @@
 				pageTitle.id = 'page-title';
 			}
 			
+			// Add anchor before page title
+			const titleAnchor = document.createElement('div');
+			titleAnchor.className = 'docs-toc-anchor';
+			titleAnchor.id = pageTitle.id + '-anchor';
+			titleAnchor.style.cssText = 'position: relative; top: -140px; height: 0; visibility: hidden; pointer-events: none;';
+			pageTitle.parentNode.insertBefore(titleAnchor, pageTitle);
+			
 			const titleItem = document.createElement('li');
 			titleItem.className = 'docs-toc__item docs-toc__item--h1';
 			
@@ -233,6 +267,7 @@
 			titleLink.href = '#' + pageTitle.id;
 			titleLink.className = 'docs-toc__link';
 			titleLink.textContent = pageTitle.textContent;
+			titleLink.setAttribute('data-anchor-id', titleAnchor.id);
 			
 			titleItem.appendChild(titleLink);
 			tocList.appendChild(titleItem);
@@ -250,6 +285,13 @@
 					.trim();
 			}
 			
+			// Add anchor before heading
+			const anchor = document.createElement('div');
+			anchor.className = 'docs-toc-anchor';
+			anchor.id = heading.id + '-anchor';
+			anchor.style.cssText = 'position: relative; top: -140px; height: 0; visibility: hidden; pointer-events: none;';
+			heading.parentNode.insertBefore(anchor, heading);
+			
 			const level = heading.tagName.toLowerCase();
 			const item = document.createElement('li');
 			item.className = 'docs-toc__item docs-toc__item--' + level;
@@ -258,6 +300,7 @@
 			link.href = '#' + heading.id;
 			link.className = 'docs-toc__link';
 			link.textContent = heading.textContent;
+			link.setAttribute('data-anchor-id', anchor.id);
 			
 			item.appendChild(link);
 			tocList.appendChild(item);
@@ -301,23 +344,44 @@
 	 */
 	function findActiveHeadingFromPositions() {
 		const scrollTop = window.scrollY;
-		const activationPoint = scrollTop + window.innerHeight * 0.15; // 15% from top
+		const viewportHeight = window.innerHeight;
+		const documentHeight = document.documentElement.scrollHeight;
+		const activationPoint = scrollTop + viewportHeight * 0.15; // 15% from top
 		
 		// If at the very top, return first heading
 		if (scrollTop < 50) {
 			return headingPositions[0]?.element;
 		}
 		
+		// Check if we're at the bottom of the page
+		const isAtBottom = scrollTop + viewportHeight >= documentHeight - 50;
+		
 		// Find the last heading that's above the activation point
 		let activeHeading = headingPositions[0]?.element;
+		let lastVisibleHeading = null;
 		
 		for (let i = 0; i < headingPositions.length; i++) {
-			if (headingPositions[i].top <= activationPoint) {
-				activeHeading = headingPositions[i].element;
+			const heading = headingPositions[i];
+			
+			// Check if heading is visible in viewport at all
+			const headingBottom = heading.top + heading.height;
+			const isVisible = heading.top < scrollTop + viewportHeight && headingBottom > scrollTop;
+			
+			if (isVisible) {
+				lastVisibleHeading = heading.element;
+			}
+			
+			if (heading.top <= activationPoint) {
+				activeHeading = heading.element;
 			} else {
 				// We've passed the activation point
 				break;
 			}
+		}
+		
+		// Special handling for bottom of page - use the last visible heading
+		if (isAtBottom && lastVisibleHeading) {
+			return lastVisibleHeading;
 		}
 		
 		return activeHeading;
