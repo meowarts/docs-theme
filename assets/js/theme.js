@@ -69,43 +69,78 @@
 
 
 	/**
+	 * Smooth scroll handler for anchor links
+	 */
+	function smoothScrollHandler(e) {
+		const href = this.getAttribute('href');
+		if (href === '#') return;
+		
+		const target = document.querySelector(href);
+		if (!target) return;
+		
+		e.preventDefault();
+		
+		// Calculate target position
+		let targetPosition;
+		if (target.id === 'page-title') {
+			// For page title, scroll to absolute top to show breadcrumbs
+			targetPosition = 0;
+		} else {
+			// For other headings, scroll with offset
+			const rect = target.getBoundingClientRect();
+			targetPosition = rect.top + window.pageYOffset - 80; // More offset for better visibility
+		}
+		
+		// Set flag to prevent updates during scroll
+		isScrollingToTarget = true;
+		
+		// Immediately update ToC to show where we're going
+		const allHeadings = document.querySelectorAll('.entry-title, .entry-content h2, .entry-content h3, .entry-content h4');
+		const targetHeading = Array.from(allHeadings).find(h => h.id === target.id);
+		if (targetHeading && window.setActiveTocLink) {
+			window.currentActiveHeading = targetHeading;
+			window.lastKnownActiveHeading = targetHeading;
+			window.setActiveTocLink(target.id);
+		}
+		
+		// Update URL without jumping
+		if (history.pushState) {
+			history.pushState(null, null, href);
+		}
+		
+		window.scrollTo({
+			top: targetPosition,
+			behavior: 'smooth'
+		});
+		
+		// Clear flag after scroll animation completes
+		setTimeout(function() {
+			isScrollingToTarget = false;
+			// Update positions after scroll
+			if (window.updateHeadingPositions && allHeadings) {
+				window.updateHeadingPositions(Array.from(allHeadings));
+			}
+			// Force update to correct heading if needed
+			const finalHeading = findActiveHeadingFromPositions();
+			if (finalHeading && finalHeading !== currentActiveHeading) {
+				currentActiveHeading = finalHeading;
+				lastKnownActiveHeading = finalHeading;
+				setActiveTocLink(finalHeading.id);
+			}
+		}, 600); // After smooth scroll animation
+	}
+
+	/**
 	 * Smooth scrolling for anchor links
 	 */
 	function initSmoothAnchors() {
 		const anchorLinks = document.querySelectorAll('a[href^="#"]');
 		
 		anchorLinks.forEach(function(link) {
-			link.addEventListener('click', function(e) {
-				const href = this.getAttribute('href');
-				if (href === '#') return;
-				
-				const target = document.querySelector(href);
-				if (!target) return;
-				
-				e.preventDefault();
-				
-				// For page title, scroll to top
-				if (target.id === 'page-title') {
-					window.scrollTo({
-						top: 0,
-						behavior: 'smooth'
-					});
-				} else {
-					// For other headings, scroll with offset
-					const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-					const offsetPosition = targetPosition - 20; // 20px offset for better visibility
-					
-					window.scrollTo({
-						top: offsetPosition,
-						behavior: 'smooth'
-					});
-				}
-				
-				// Update URL without jumping
-				if (history.pushState) {
-					history.pushState(null, null, href);
-				}
-			});
+			// Remove any existing listener to avoid duplicates
+			link.removeEventListener('click', smoothScrollHandler);
+			// Add the listener
+			link.addEventListener('click', smoothScrollHandler);
 		});
 	}
 
@@ -141,6 +176,14 @@
 		initTableOfContents();
 	}
 
+	// Store the current observer so we can disconnect it when needed
+	let tocObserver = null;
+	let currentActiveHeading = null;
+	let lastKnownActiveHeading = null; // Persistent active heading
+	let updateTimer = null; // Debounce timer
+	let headingPositions = []; // Store exact positions of all headings
+	let isScrollingToTarget = false; // Flag to prevent updates during smooth scroll
+
 	/**
 	 * Generate and manage table of contents
 	 */
@@ -151,8 +194,26 @@
 		
 		if (!tocContainer || !content) return;
 		
+		// Clean up any existing observer
+		if (tocObserver) {
+			tocObserver.disconnect();
+			tocObserver = null;
+		}
+		
+		// Clean up any existing scroll handler
+		if (window.tocScrollHandler) {
+			window.removeEventListener('scroll', window.tocScrollHandler);
+			window.tocScrollHandler = null;
+		}
+		
 		// Find all headings
 		const headings = content.querySelectorAll('h2, h3, h4');
+		
+		// Clear existing TOC content
+		tocContainer.innerHTML = '';
+		
+		// Reset the active ToC tracking
+		currentActiveTocId = null;
 		
 		// Build TOC
 		const tocList = document.createElement('ul');
@@ -207,47 +268,202 @@
 		// Create array with all headings including title
 		const allHeadings = pageTitle ? [pageTitle, ...headings] : [...headings];
 		
-		// Update active state on scroll
-		let scrollTimer;
-		window.addEventListener('scroll', function() {
-			if (scrollTimer) clearTimeout(scrollTimer);
-			scrollTimer = setTimeout(function() {
-				updateActiveTocItem(allHeadings);
-			}, 10);
+		// Set up smooth scrolling for the ToC links
+		const tocLinks = tocContainer.querySelectorAll('a[href^="#"]');
+		tocLinks.forEach(function(link) {
+			// Remove any existing listener first
+			link.removeEventListener('click', smoothScrollHandler);
+			// Add the listener
+			link.addEventListener('click', smoothScrollHandler);
 		});
 		
-		// Initial update
-		updateActiveTocItem(allHeadings);
+		// Set up Intersection Observer for heading visibility
+		setupTocObserver(allHeadings);
 	}
 
 	/**
-	 * Update active TOC item based on scroll position
+	 * Calculate and store heading positions
 	 */
-	function updateActiveTocItem(headings) {
-		const scrollPosition = window.scrollY;
-		let activeHeading = null;
+	function updateHeadingPositions(headings) {
+		headingPositions = headings.map(function(heading) {
+			const rect = heading.getBoundingClientRect();
+			return {
+				element: heading,
+				id: heading.id,
+				top: rect.top + window.scrollY,
+				height: rect.height
+			};
+		});
+	}
+
+	/**
+	 * Find active heading using stored positions
+	 */
+	function findActiveHeadingFromPositions() {
+		const scrollTop = window.scrollY;
+		const activationPoint = scrollTop + window.innerHeight * 0.15; // 15% from top
 		
-		// Special handling for page title - if we're near top of page
-		if (scrollPosition < 200 && headings[0] && headings[0].id === 'page-title') {
-			activeHeading = headings[0];
-		} else {
-			// Find current active heading
-			for (let i = headings.length - 1; i >= 0; i--) {
-				if (scrollPosition >= headings[i].offsetTop - 100) {
-					activeHeading = headings[i];
-					break;
-				}
+		// If at the very top, return first heading
+		if (scrollTop < 50) {
+			return headingPositions[0]?.element;
+		}
+		
+		// Find the last heading that's above the activation point
+		let activeHeading = headingPositions[0]?.element;
+		
+		for (let i = 0; i < headingPositions.length; i++) {
+			if (headingPositions[i].top <= activationPoint) {
+				activeHeading = headingPositions[i].element;
+			} else {
+				// We've passed the activation point
+				break;
 			}
 		}
 		
-		// Update active classes
+		return activeHeading;
+	}
+
+	/**
+	 * Set up ToC tracking system
+	 */
+	function setupTocObserver(headings) {
+		if (!headings || headings.length === 0) return;
+		
+		// Reset state
+		currentActiveHeading = null;
+		if (!lastKnownActiveHeading && headings.length > 0) {
+			lastKnownActiveHeading = headings[0]; // Default to first heading
+		}
+		
+		// Clean up any existing observer
+		if (tocObserver) {
+			tocObserver.disconnect();
+			tocObserver = null;
+		}
+		
+		// Clean up any existing scroll handler
+		if (window.tocScrollHandler) {
+			window.removeEventListener('scroll', window.tocScrollHandler);
+			window.tocScrollHandler = null;
+		}
+		
+		// Calculate initial positions
+		updateHeadingPositions(headings);
+		
+		// Simple scroll-based system
+		let scrollTimer;
+		let rafId = null;
+		
+		const scrollHandler = function() {
+			// Skip updates if we're scrolling to a target
+			if (isScrollingToTarget) return;
+			
+			// Cancel any pending animation frame
+			if (rafId) {
+				cancelAnimationFrame(rafId);
+			}
+			
+			// Use requestAnimationFrame for smooth updates
+			rafId = requestAnimationFrame(function() {
+				// Double-check the flag in case it changed
+				if (isScrollingToTarget) return;
+				
+				const activeHeading = findActiveHeadingFromPositions();
+				if (activeHeading && activeHeading !== currentActiveHeading) {
+					currentActiveHeading = activeHeading;
+					lastKnownActiveHeading = activeHeading;
+					setActiveTocLink(activeHeading.id);
+				}
+			});
+			
+			// Debounce position recalculation
+			if (scrollTimer) clearTimeout(scrollTimer);
+			scrollTimer = setTimeout(function() {
+				// Recalculate positions in case of dynamic content
+				updateHeadingPositions(headings);
+			}, 500);
+		};
+		
+		// Store the handler so we can remove it later
+		window.tocScrollHandler = scrollHandler;
+		window.addEventListener('scroll', scrollHandler, { passive: true });
+		
+		// Also update positions on resize
+		let resizeTimer;
+		window.addEventListener('resize', function() {
+			if (resizeTimer) clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(function() {
+				updateHeadingPositions(headings);
+				// Update active heading after resize
+				const activeHeading = findActiveHeadingFromPositions();
+				if (activeHeading) {
+					currentActiveHeading = activeHeading;
+					lastKnownActiveHeading = activeHeading;
+					setActiveTocLink(activeHeading.id);
+				}
+			}, 250);
+		});
+		
+		// Set initial active heading
+		const initialActive = findActiveHeadingFromPositions();
+		if (initialActive) {
+			currentActiveHeading = initialActive;
+			lastKnownActiveHeading = initialActive;
+			setActiveTocLink(initialActive.id);
+		}
+	}
+
+
+	// Track the currently active ToC link to avoid unnecessary updates
+	let currentActiveTocId = null;
+
+	/**
+	 * Set active ToC link
+	 */
+	function setActiveTocLink(headingId) {
+		if (!headingId) return;
+		
+		// Skip if this is already the active heading
+		if (currentActiveTocId === headingId) return;
+		
 		const tocLinks = document.querySelectorAll('.docs-toc__link');
+		let foundActive = false;
+		
 		tocLinks.forEach(function(link) {
-			link.classList.remove('is-active');
-			if (activeHeading && link.getAttribute('href') === '#' + activeHeading.id) {
-				link.classList.add('is-active');
+			const href = link.getAttribute('href');
+			const isActive = href === '#' + headingId;
+			const hasActiveClass = link.classList.contains('is-active');
+			
+			if (isActive) {
+				foundActive = true;
+				// Only add class if not already present
+				if (!hasActiveClass) {
+					link.classList.add('is-active');
+				}
+			} else if (hasActiveClass) {
+				// Only remove class if it exists
+				link.classList.remove('is-active');
 			}
 		});
+		
+		// Update the tracked active ID
+		if (foundActive) {
+			currentActiveTocId = headingId;
+		}
+		
+		// Ensure at least one item is active
+		if (!foundActive && tocLinks.length > 0 && lastKnownActiveHeading && currentActiveTocId !== lastKnownActiveHeading.id) {
+			// Try to activate the last known heading
+			tocLinks.forEach(function(link) {
+				const href = link.getAttribute('href');
+				if (href === '#' + lastKnownActiveHeading.id) {
+					if (!link.classList.contains('is-active')) {
+						link.classList.add('is-active');
+					}
+					currentActiveTocId = lastKnownActiveHeading.id;
+				}
+			});
+		}
 	}
 
 	/**
@@ -329,5 +545,10 @@
 	window.initSmoothAnchors = initSmoothAnchors;
 	window.initTableOfContents = initTableOfContents;
 	window.initHighlightJS = initHighlightJS;
+	window.setupTocObserver = setupTocObserver;
+	window.setActiveTocLink = setActiveTocLink;
+	window.currentActiveHeading = currentActiveHeading;
+	window.lastKnownActiveHeading = lastKnownActiveHeading;
+	window.updateHeadingPositions = updateHeadingPositions;
 
 })();

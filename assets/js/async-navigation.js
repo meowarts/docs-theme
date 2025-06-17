@@ -244,7 +244,8 @@
         const tocContainer = document.querySelector(config.tocSelector);
 
         // Fade out current content
-        const elementsToFade = [contentEl, titleEl, subtitleEl, tocContainer].filter(Boolean);
+        const tocSidebarToFade = document.querySelector('.docs-sidebar-right');
+        const elementsToFade = [contentEl, titleEl, subtitleEl, tocSidebarToFade].filter(Boolean);
         elementsToFade.forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(10px)';
@@ -324,9 +325,49 @@
             }
         }
 
-        // Update table of contents
-        if (tocContainer) {
-            updateTableOfContents(data.headings, data.title);
+        // Handle table of contents visibility
+        let tocSidebar = document.querySelector('.docs-sidebar-right');
+        
+        if (data.show_toc) {
+            // Show TOC if it should be visible
+            if (!tocSidebar) {
+                // Create TOC sidebar if it doesn't exist
+                const newTocSidebar = document.createElement('aside');
+                newTocSidebar.className = 'docs-sidebar-right';
+                newTocSidebar.innerHTML = `
+                    <h4 class="toc-title">Table of contents</h4>
+                    <nav class="docs-toc" id="table-of-contents"></nav>
+                `;
+                // Start with opacity 0 for fade-in effect
+                newTocSidebar.style.opacity = '0';
+                newTocSidebar.style.transform = 'translateY(10px)';
+                newTocSidebar.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                
+                const mainContent = document.querySelector('.docs-content');
+                if (mainContent && mainContent.parentNode) {
+                    mainContent.parentNode.insertBefore(newTocSidebar, mainContent.nextSibling);
+                    tocSidebar = newTocSidebar; // Update reference
+                }
+            } else {
+                // Make sure it's visible
+                tocSidebar.style.display = '';
+                // Reset opacity in case it was hidden
+                tocSidebar.style.opacity = '0';
+                tocSidebar.style.transform = 'translateY(10px)';
+            }
+            
+            // Always rebuild ToC from scratch using the same function as initial load
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                if (window.initTableOfContents) {
+                    window.initTableOfContents();
+                }
+            }, 50);
+        } else {
+            // Hide TOC if it shouldn't be visible
+            if (tocSidebar) {
+                tocSidebar.style.display = 'none';
+            }
         }
 
         // Update document title
@@ -343,11 +384,22 @@
         const elementsToFadeIn = [
             document.querySelector(config.contentSelector),
             document.querySelector(config.titleSelector),
-            document.querySelector(config.subtitleSelector),
-            document.querySelector(config.tocSelector)
-        ].filter(Boolean);
+            document.querySelector(config.subtitleSelector)
+        ];
         
-        elementsToFadeIn.forEach(el => {
+        // Only include TOC sidebar in fade-in if it's visible
+        if (data.show_toc) {
+            // Re-query to make sure we get the newly created sidebar
+            const tocSidebarElement = document.querySelector('.docs-sidebar-right');
+            if (tocSidebarElement) {
+                elementsToFadeIn.push(tocSidebarElement);
+            }
+        }
+        
+        // Filter out null elements
+        const validElements = elementsToFadeIn.filter(Boolean);
+        
+        validElements.forEach(el => {
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
         });
@@ -356,54 +408,6 @@
         return breadcrumbUpdateData;
     }
 
-    /**
-     * Update table of contents
-     */
-    function updateTableOfContents(headings, pageTitle) {
-        const tocContainer = document.querySelector(config.tocSelector);
-        if (!tocContainer) return;
-
-        // Clear current TOC and any existing event listeners
-        tocContainer.innerHTML = '';
-
-        // Reinitialize TOC completely
-        if (window.initTableOfContents) {
-            // Let the existing function build the TOC from current DOM
-            window.initTableOfContents();
-        } else {
-            // Fallback: build TOC manually
-            const tocList = document.createElement('ul');
-            tocList.className = 'docs-toc__list';
-
-            // Add page title as first item
-            const titleItem = document.createElement('li');
-            titleItem.className = 'docs-toc__item docs-toc__item--h1';
-            
-            const titleLink = document.createElement('a');
-            titleLink.href = '#page-title';
-            titleLink.className = 'docs-toc__link';
-            titleLink.textContent = pageTitle;
-            
-            titleItem.appendChild(titleLink);
-            tocList.appendChild(titleItem);
-
-            // Add other headings
-            headings.forEach(heading => {
-                const item = document.createElement('li');
-                item.className = `docs-toc__item docs-toc__item--h${heading.level}`;
-                
-                const link = document.createElement('a');
-                link.href = `#${heading.id}`;
-                link.className = 'docs-toc__link';
-                link.textContent = heading.text;
-                
-                item.appendChild(link);
-                tocList.appendChild(item);
-            });
-
-            tocContainer.appendChild(tocList);
-        }
-    }
 
     /**
      * Update active states in sidebar

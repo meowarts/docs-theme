@@ -35,11 +35,11 @@
   margin-bottom: var(--spacing-xs);
   
   &--h1 {
-    font-weight: 600;
+    // Page title styling
   }
   
   &--h2 {
-    font-weight: 500;
+    // H2 heading styling
   }
   
   &--h3 {
@@ -56,31 +56,24 @@
 
 .docs-toc__link {
   display: block;
-  padding: var(--spacing-xs) 0;
-  padding-left: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin-left: 2px; // Account for border
   color: var(--color-foreground);
   text-decoration: none;
   font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: var(--line-height-normal);
   border-left: 2px solid transparent;
-  transition: color $transition-fast, border-color $transition-fast, background-color $transition-fast, font-weight $transition-fast, transform $transition-fast;
+  transition: color $transition-fast, border-color $transition-fast, background-color $transition-fast;
   position: relative;
-  transform: translateX(0);
   
   &:hover {
     color: var(--color-accent);
-    transform: translateX(var(--spacing-sm));
   }
   
   &.is-active {
     color: var(--color-accent);
     border-left-color: var(--color-accent);
     background-color: var(--color-accent-bg);
-    font-weight: 600;
-    padding-left: 15px;
-    padding-right: var(--spacing-sm);
-    margin: 0 calc(var(--spacing-sm) * -1);
-    transform: translateX(var(--spacing-sm));
   }
 }

@@ -74,7 +74,7 @@ get_header(); ?>
 			</div>
 			
 			<header class="entry-header">
-				<h1 class="entry-title">
+				<h1 class="entry-title" id="page-title">
 						<?php echo get_the_title(); ?>
 				</h1>
 				

@@ -47,6 +47,26 @@ function docs_theme_get_page_content($request) {
     // Get page content
     $content = apply_filters('the_content', $page->post_content);
     
+    // Add IDs to headings in content
+    $content = preg_replace_callback(
+        '/<h([2-4])([^>]*)>(.+?)<\/h\1>/i',
+        function($matches) {
+            $level = $matches[1];
+            $attrs = $matches[2];
+            $text = $matches[3];
+            
+            // Check if heading already has an ID
+            if (strpos($attrs, 'id=') === false) {
+                // Generate ID from heading text
+                $id = sanitize_title(strip_tags($text));
+                $attrs .= ' id="' . esc_attr($id) . '"';
+            }
+            
+            return '<h' . $level . $attrs . '>' . $text . '</h' . $level . '>';
+        },
+        $content
+    );
+    
     // Generate breadcrumbs manually for REST API context
     $breadcrumbs_html = '';
     if (function_exists('docs_theme_show_breadcrumbs') && docs_theme_show_breadcrumbs()) {
@@ -151,7 +171,7 @@ function docs_theme_get_page_content($request) {
     // Get subtitle
     $subtitle = get_post_meta($page_id, '_docs_theme_subtitle', true);
     
-    // Get table of contents headings
+    // Get table of contents headings - no longer generate HTML
     $headings = docs_theme_extract_headings($content);
     
     // Get child pages if any
@@ -210,6 +230,11 @@ function docs_theme_get_page_content($request) {
         $child_pages_html = ob_get_clean();
     }
     
+    // Determine if TOC should be shown
+    $has_child_pages = !empty($full_child_pages);
+    $content_length = strlen(strip_tags($content));
+    $show_toc = !$has_child_pages || $content_length > 500;
+    
     // Build response
     $response = array(
         'id' => $page_id,
@@ -220,7 +245,8 @@ function docs_theme_get_page_content($request) {
         'badges_html' => $badges_html,
         'headings' => $headings,
         'child_pages_html' => $child_pages_html,
-        'has_children' => !empty($full_child_pages),
+        'has_children' => $has_child_pages,
+        'show_toc' => $show_toc,
         'url' => get_permalink($page_id),
         'parent_id' => $page->post_parent,
     );
