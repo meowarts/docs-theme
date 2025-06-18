@@ -57,6 +57,20 @@ body {
         rgba(0, 0, 0, 0.4) 100%
       );
   }
+  
+  // Prevent scrolling when mobile menu is open
+  &.mobile-menu-open {
+    @include mobile {
+      overflow: hidden;
+    }
+  }
+  
+  // Hide admin bar on mobile
+  @include mobile {
+    #wpadminbar {
+      display: none !important;
+    }
+  }
 }
 
 // Ensure content appears above CRT effect

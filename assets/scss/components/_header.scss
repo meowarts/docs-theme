@@ -8,7 +8,9 @@
   padding: 0 var(--sidebar-padding-horizontal);
   
   @include mobile {
-    justify-content: center;
+    padding: 0;
+    gap: var(--spacing-sm);
+    flex: initial; // Remove flex: 1 that was causing the space
   }
 }
 
@@ -135,3 +137,75 @@
     justify-content: center;
   }
 }
+
+// Mobile menu toggle button
+.mobile-menu-toggle {
+  @include button-reset;
+  display: none; // Hidden by default
+  padding: var(--spacing-sm);
+  color: var(--color-foreground);
+  cursor: pointer;
+  
+  @include mobile {
+    display: block; // Show on mobile
+  }
+  
+  &:hover {
+    .burger-icon span {
+      background-color: var(--color-accent);
+    }
+  }
+}
+
+// Burger icon animation
+.burger-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  
+  span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background-color: var(--color-foreground);
+    border-radius: 2px;
+    left: 0;
+    transition: all 0.3s ease;
+    
+    &:nth-child(1) {
+      top: 5px;
+    }
+    
+    &:nth-child(2) {
+      top: 11px;
+    }
+    
+    &:nth-child(3) {
+      top: 17px;
+    }
+  }
+}
+
+// Transform burger to X when menu is open
+.mobile-menu-toggle[aria-expanded="true"] {
+  .burger-icon span {
+    &:nth-child(1) {
+      transform: rotate(45deg);
+      top: 11px;
+    }
+    
+    &:nth-child(2) {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    
+    &:nth-child(3) {
+      transform: rotate(-45deg);
+      top: 11px;
+    }
+  }
+}
+
+// Mobile sidebar header removed - using animated burger button instead

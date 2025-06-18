@@ -33,26 +33,7 @@
   }
 }
 
-// Mobile menu toggle (added by JS)
-.mobile-menu-toggle {
-  @include button-reset;
-  display: none;
-  width: 100%;
-  padding: var(--spacing-md);
-  background-color: var(--color-primary);
-  color: white;
-  text-align: left;
-  font-size: var(--font-size-base);
-  font-weight: 500;
-  
-  &:hover {
-    background-color: var(--color-secondary);
-  }
-  
-  @include mobile {
-    display: block;
-  }
-}
+// Mobile menu toggle styles moved to components/_header.scss
 
 .docs-sidebar-left.menu-open {
   .sidebar-pages-navigation {

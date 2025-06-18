@@ -7,6 +7,10 @@
   margin-bottom: var(--spacing-xl);
   gap: var(--spacing-lg);
   min-height: 32px; // Ensure consistent height even without badges
+  
+  @include mobile {
+    display: none;
+  }
 }
 
 .docs-breadcrumbs {

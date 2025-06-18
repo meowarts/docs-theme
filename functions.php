@@ -53,12 +53,6 @@ function enqueue_scripts() {
 		DOCS_THEME_VERSION
 	);
 	
-	wp_enqueue_style(
-		'docs-theme-navigation',
-		DOCS_THEME_URI . '/assets/css/navigation.css',
-		array( 'docs-theme-style' ),
-		DOCS_THEME_VERSION
-	);
 	
 	// Enqueue Inter and JetBrains Mono fonts.
 	wp_enqueue_style(
@@ -297,33 +291,6 @@ function replace_template_tags( $block_content, $block ) {
 }
 add_filter( 'render_block', __NAMESPACE__ . '\\replace_template_tags', 10, 2 );
 
-/**
- * Add mobile menu functionality.
- */
-function add_mobile_menu_button() {
-	?>
-	<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const leftSidebar = document.querySelector('.docs-sidebar-left');
-		if (!leftSidebar || window.innerWidth > 768) return;
-		
-		const button = document.createElement('button');
-		button.className = 'mobile-menu-toggle';
-		button.textContent = 'Menu';
-		button.setAttribute('aria-expanded', 'false');
-		
-		leftSidebar.insertBefore(button, leftSidebar.firstChild);
-		
-		button.addEventListener('click', function() {
-			const isExpanded = button.getAttribute('aria-expanded') === 'true';
-			button.setAttribute('aria-expanded', !isExpanded);
-			leftSidebar.classList.toggle('menu-open');
-		});
-	});
-	</script>
-	<?php
-}
-add_action( 'wp_footer', __NAMESPACE__ . '\\add_mobile_menu_button' );
 
 /**
  * Custom excerpt length for documentation pages.

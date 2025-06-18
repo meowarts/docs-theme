@@ -35,6 +35,11 @@
      * Initialize async navigation
      */
     function init() {
+        // Don't initialize on mobile devices
+        if (window.innerWidth <= 768) {
+            return;
+        }
+        
         // Intercept clicks on internal links
         document.addEventListener('click', handleLinkClick);
         
