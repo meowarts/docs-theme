@@ -170,6 +170,71 @@
 	}
 
 	/**
+	 * Initialize parent page click interception
+	 */
+	function initParentPageHandlers() {
+		const pageLinks = document.querySelectorAll('.page-link');
+		pageLinks.forEach(function(link) {
+			const pageItem = link.closest('.page-item');
+			if (pageItem && pageItem.classList.contains('has-children')) {
+				// Skip if already initialized
+				if (link.hasAttribute('data-parent-handler')) {
+					return;
+				}
+				
+				// Mark as initialized
+				link.setAttribute('data-parent-handler', 'true');
+				
+				// Add our click handler with capture phase to ensure it runs first
+				link.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					e.stopImmediatePropagation();
+					
+					// Find the toggle button and children list
+					const toggleButton = pageItem.querySelector('.toggle-children');
+					const childrenList = pageItem.querySelector('.children');
+					
+					if (!childrenList) {
+						// If no children found, let the async navigation handle it normally
+						return;
+					}
+					
+					// Add visual feedback
+					link.style.opacity = '0.6';
+					
+					// Expand the menu if not already expanded
+					if (toggleButton && toggleButton.getAttribute('aria-expanded') !== 'true') {
+						childrenList.style.display = 'block';
+						toggleButton.setAttribute('aria-expanded', 'true');
+					}
+					
+					// Find the first child link
+					const firstChildLink = childrenList.querySelector('.page-link');
+					if (firstChildLink) {
+						// Reset parent link opacity after a moment
+						setTimeout(function() {
+							link.style.opacity = '';
+						}, 300);
+						
+						// Trigger a click on the first child to use async navigation
+						firstChildLink.click();
+					}
+					
+					return false;
+				}, true); // Use capture phase
+				
+				// Also prevent default on mousedown to catch early interactions
+				link.addEventListener('mousedown', function(e) {
+					if (e.button === 0) { // Left click only
+						e.preventDefault();
+					}
+				});
+			}
+		});
+	}
+
+	/**
 	 * Make sidebar page hierarchy collapsible
 	 */
 	function initCollapsibleMenus() {
@@ -196,6 +261,9 @@
 				}
 			});
 		});
+		
+		// Initialize parent page handlers
+		initParentPageHandlers();
 		
 		// Also initialize table of contents
 		initTableOfContents();
@@ -690,5 +758,6 @@
 	window.lastKnownActiveHeading = lastKnownActiveHeading;
 	window.updateHeadingPositions = updateHeadingPositions;
 	window.findActiveHeadingFromPositions = findActiveHeadingFromPositions;
+	window.initParentPageHandlers = initParentPageHandlers;
 
 })();

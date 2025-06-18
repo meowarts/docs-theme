@@ -529,6 +529,11 @@
         if (window.initSmoothAnchors) {
             window.initSmoothAnchors();
         }
+        
+        // Reinitialize parent page handlers for sidebar navigation
+        if (window.initParentPageHandlers) {
+            window.initParentPageHandlers();
+        }
 
         // Add data-page-id to new links
         document.querySelectorAll('.entry-content a, .docs-page-card').forEach(link => {
