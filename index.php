@@ -55,9 +55,4 @@ get_header(); ?>
 	?>
 </main>
 
-<aside class="docs-sidebar-right">
-	<h4 class="toc-title"><?php esc_html_e( 'Table of contents', 'docs-theme' ); ?></h4>
-	<nav class="docs-toc" id="table-of-contents"></nav>
-</aside>
-
 <?php get_footer();

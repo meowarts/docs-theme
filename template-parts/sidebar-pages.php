@@ -60,28 +60,31 @@ function render_page_tree( $pages, $parent_id = 0, $current_page_id = 0 ) {
 			
 			$output .= '<li class="' . esc_attr( $classes ) . '">';
 			$output .= '<div class="page-item-wrapper">';
-			// Build breadcrumb data for this page
-			$breadcrumb_items = array();
-			$breadcrumb_items[] = __('Documentation', 'docs-theme');
-			
-			// Get all ancestors
-			$ancestors = get_post_ancestors( $page->ID );
-			if ( !empty( $ancestors ) ) {
-				$ancestors = array_reverse( $ancestors );
-				foreach ( $ancestors as $ancestor_id ) {
-					$breadcrumb_items[] = get_the_title( $ancestor_id );
-				}
-			}
-			
-			// Add current page
-			$breadcrumb_items[] = $page->post_title;
-			
-			$output .= '<a href="' . get_permalink( $page->ID ) . '" class="page-link" data-page-id="' . esc_attr( $page->ID ) . '" data-breadcrumbs="' . esc_attr( json_encode( $breadcrumb_items ) ) . '">' . esc_html( $page->post_title ) . '</a>';
 			
 			if ( $has_children ) {
+				// For parent pages with children, make the text clickable but not a link
+				$output .= '<span class="page-link page-parent" data-page-id="' . esc_attr( $page->ID ) . '">' . esc_html( $page->post_title ) . '</span>';
 				$output .= '<button class="toggle-children" aria-expanded="' . ( $is_active ? 'true' : 'false' ) . '">';
 				$output .= '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none"/></svg>';
 				$output .= '</button>';
+			} else {
+				// Build breadcrumb data for this page
+				$breadcrumb_items = array();
+				$breadcrumb_items[] = __('Documentation', 'docs-theme');
+				
+				// Get all ancestors
+				$ancestors = get_post_ancestors( $page->ID );
+				if ( !empty( $ancestors ) ) {
+					$ancestors = array_reverse( $ancestors );
+					foreach ( $ancestors as $ancestor_id ) {
+						$breadcrumb_items[] = get_the_title( $ancestor_id );
+					}
+				}
+				
+				// Add current page
+				$breadcrumb_items[] = $page->post_title;
+				
+				$output .= '<a href="' . get_permalink( $page->ID ) . '" class="page-link" data-page-id="' . esc_attr( $page->ID ) . '" data-breadcrumbs="' . esc_attr( json_encode( $breadcrumb_items ) ) . '">' . esc_html( $page->post_title ) . '</a>';
 			}
 			
 			$output .= '</div>';

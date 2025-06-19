@@ -217,6 +217,13 @@
 
             // Update active states
             updateActiveStates(pageId);
+            
+            // Reinitialize menu handlers after a small delay to ensure DOM is settled
+            setTimeout(() => {
+                if (window.reinitMenuHandlers) {
+                    window.reinitMenuHandlers();
+                }
+            }, 100);
 
             // Scroll to top smoothly
             window.scrollTo({
@@ -473,9 +480,12 @@
      * Update active states in sidebar
      */
     function updateActiveStates(pageId) {
-        // Remove current active states
+        // Remove current active states and active-parent classes
         document.querySelectorAll('.current-page').forEach(el => {
             el.classList.remove('current-page');
+        });
+        document.querySelectorAll('.active-parent').forEach(el => {
+            el.classList.remove('active-parent');
         });
 
         // Find and activate new current page
@@ -485,7 +495,7 @@
             if (pageItem) {
                 pageItem.classList.add('current-page');
                 
-                // Expand parent items if needed
+                // Expand parent items if needed and mark them as active-parent
                 let parent = pageItem.parentElement;
                 while (parent) {
                     if (parent.classList.contains('children')) {
@@ -494,19 +504,17 @@
                         if (toggle) {
                             toggle.setAttribute('aria-expanded', 'true');
                         }
+                        // Mark the parent page item as active-parent
+                        const parentPageItem = parent.closest('.page-item');
+                        if (parentPageItem) {
+                            parentPageItem.classList.add('active-parent');
+                        }
                     }
                     parent = parent.parentElement?.closest('.page-item');
                 }
                 
-                // Also expand this item's children if it has any
-                const childrenList = pageItem.querySelector('.children');
-                if (childrenList) {
-                    childrenList.style.display = 'block';
-                    const toggle = pageItem.querySelector('.toggle-children');
-                    if (toggle) {
-                        toggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
+                // Don't automatically expand current page's children
+                // Let the user decide when to expand/collapse
             }
         }
     }

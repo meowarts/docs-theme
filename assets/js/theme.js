@@ -170,67 +170,28 @@
 	}
 
 	/**
-	 * Initialize parent page click interception
+	 * Initialize parent page click handlers
 	 */
 	function initParentPageHandlers() {
-		const pageLinks = document.querySelectorAll('.page-link');
-		pageLinks.forEach(function(link) {
-			const pageItem = link.closest('.page-item');
-			if (pageItem && pageItem.classList.contains('has-children')) {
-				// Skip if already initialized
-				if (link.hasAttribute('data-parent-handler')) {
-					return;
-				}
-				
-				// Mark as initialized
-				link.setAttribute('data-parent-handler', 'true');
-				
-				// Add our click handler with capture phase to ensure it runs first
-				link.addEventListener('click', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					e.stopImmediatePropagation();
-					
-					// Find the toggle button and children list
-					const toggleButton = pageItem.querySelector('.toggle-children');
-					const childrenList = pageItem.querySelector('.children');
-					
-					if (!childrenList) {
-						// If no children found, let the async navigation handle it normally
-						return;
-					}
-					
-					// Add visual feedback
-					link.style.opacity = '0.6';
-					
-					// Expand the menu if not already expanded
-					if (toggleButton && toggleButton.getAttribute('aria-expanded') !== 'true') {
-						childrenList.style.display = 'block';
-						toggleButton.setAttribute('aria-expanded', 'true');
-					}
-					
-					// Find the first child link
-					const firstChildLink = childrenList.querySelector('.page-link');
-					if (firstChildLink) {
-						// Reset parent link opacity after a moment
-						setTimeout(function() {
-							link.style.opacity = '';
-						}, 300);
-						
-						// Trigger a click on the first child to use async navigation
-						firstChildLink.click();
-					}
-					
-					return false;
-				}, true); // Use capture phase
-				
-				// Also prevent default on mousedown to catch early interactions
-				link.addEventListener('mousedown', function(e) {
-					if (e.button === 0) { // Left click only
-						e.preventDefault();
-					}
-				});
+		// Make parent page text clickable to toggle submenu
+		const parentPages = document.querySelectorAll('.page-parent');
+		parentPages.forEach(function(parentSpan) {
+			// Skip if already initialized
+			if (parentSpan.hasAttribute('data-initialized')) {
+				return;
 			}
+			
+			// Mark as initialized
+			parentSpan.setAttribute('data-initialized', 'true');
+			
+			parentSpan.addEventListener('click', function(e) {
+				e.preventDefault();
+				const pageItem = parentSpan.closest('.page-item');
+				const toggleButton = pageItem.querySelector('.toggle-children');
+				if (toggleButton) {
+					toggleButton.click();
+				}
+			});
 		});
 	}
 
@@ -241,6 +202,14 @@
 		const toggleButtons = document.querySelectorAll('.toggle-children');
 		
 		toggleButtons.forEach(function(button) {
+			// Skip if already initialized
+			if (button.hasAttribute('data-initialized')) {
+				return;
+			}
+			
+			// Mark as initialized
+			button.setAttribute('data-initialized', 'true');
+			
 			button.addEventListener('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -267,6 +236,65 @@
 		
 		// Also initialize table of contents
 		initTableOfContents();
+	}
+	
+	/**
+	 * Reinitialize menu handlers (for async navigation)
+	 */
+	function reinitMenuHandlers() {
+		// First, remove all existing event listeners by cloning elements
+		document.querySelectorAll('.toggle-children').forEach(function(button) {
+			const newButton = button.cloneNode(true);
+			newButton.removeAttribute('data-initialized');
+			button.parentNode.replaceChild(newButton, button);
+		});
+		
+		document.querySelectorAll('.page-parent').forEach(function(span) {
+			const newSpan = span.cloneNode(true);
+			newSpan.removeAttribute('data-initialized');
+			span.parentNode.replaceChild(newSpan, span);
+		});
+		
+		// Now reinitialize all handlers
+		const toggleButtons = document.querySelectorAll('.toggle-children');
+		toggleButtons.forEach(function(button) {
+			button.setAttribute('data-initialized', 'true');
+			
+			button.addEventListener('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				const pageItem = button.closest('.page-item');
+				const childrenList = pageItem.querySelector('.children');
+				
+				if (!childrenList) return;
+				
+				const isExpanded = button.getAttribute('aria-expanded') === 'true';
+				
+				if (isExpanded) {
+					childrenList.style.display = 'none';
+					button.setAttribute('aria-expanded', 'false');
+				} else {
+					childrenList.style.display = 'block';
+					button.setAttribute('aria-expanded', 'true');
+				}
+			});
+		});
+		
+		// Reinitialize parent page handlers
+		const parentPages = document.querySelectorAll('.page-parent');
+		parentPages.forEach(function(parentSpan) {
+			parentSpan.setAttribute('data-initialized', 'true');
+			
+			parentSpan.addEventListener('click', function(e) {
+				e.preventDefault();
+				const pageItem = parentSpan.closest('.page-item');
+				const toggleButton = pageItem.querySelector('.toggle-children');
+				if (toggleButton) {
+					toggleButton.click();
+				}
+			});
+		});
 	}
 
 	// Store the current observer so we can disconnect it when needed
@@ -759,5 +787,6 @@
 	window.updateHeadingPositions = updateHeadingPositions;
 	window.findActiveHeadingFromPositions = findActiveHeadingFromPositions;
 	window.initParentPageHandlers = initParentPageHandlers;
+	window.reinitMenuHandlers = reinitMenuHandlers;
 
 })();
