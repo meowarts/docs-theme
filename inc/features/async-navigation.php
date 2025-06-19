@@ -335,7 +335,9 @@ function docs_theme_add_link_attributes($content) {
             $page_id = url_to_postid($url);
             
             if ($page_id && get_post_type($page_id) === 'page') {
-                return $matches[1] . $matches[2] . $matches[3] . ' data-page-id="' . $page_id . '"';
+                // Insert data-page-id before the closing > of the tag
+                $before_closing = substr($matches[3], 0, -1); // Remove the final >
+                return $matches[1] . $matches[2] . $before_closing . ' data-page-id="' . $page_id . '">';
             }
             
             return $matches[0];
