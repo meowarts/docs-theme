@@ -13,20 +13,12 @@ function docs_theme_enable_page_attributes() {
 }
 
 // Add custom columns to pages list in admin
-add_filter('manage_pages_columns', 'docs_theme_add_order_column');
+add_filter('manage_pages_columns', 'docs_theme_add_order_column', 20);
 function docs_theme_add_order_column($columns) {
-    $new_columns = array();
+    // Add menu_order column at the end
+    $columns['menu_order'] = __('Order', 'docs-theme');
     
-    foreach($columns as $key => $value) {
-        if ($key == 'title') {
-            $new_columns[$key] = $value;
-            $new_columns['menu_order'] = __('Order', 'docs-theme');
-        } else {
-            $new_columns[$key] = $value;
-        }
-    }
-    
-    return $new_columns;
+    return $columns;
 }
 
 // Display menu order in the custom column
