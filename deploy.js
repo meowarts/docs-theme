@@ -146,11 +146,23 @@ function deployViaSFTP(env) {
         
         log('🔄 Uploading files via SFTP...', 'yellow');
 
+        // Get remote path and create directory structure
+        const remotePath = env.SFTP_REMOTE_PATH || '/wp-content/themes/docs-theme';
+        const pathParts = remotePath.split('/').filter(p => p);
+        log(`Remote path: ${remotePath}`);
+        
+        const mkdirCommands = [];
+        let currentPath = '';
+        
+        // Build mkdir commands for each directory level
+        pathParts.forEach(part => {
+            currentPath += (currentPath ? '/' : '') + part;
+            mkdirCommands.push(`-mkdir ${currentPath}`);
+        });
+
         const sftpCommands = [
-            '-mkdir /wp-content',
-            '-mkdir /wp-content/themes',
-            '-mkdir /wp-content/themes/docs-theme',
-            'cd /wp-content/themes/docs-theme',
+            ...mkdirCommands,
+            `cd ${pathParts.join('/')}`,
             'put -r deploy/* .',
             'bye'
         ].join('\n');
