@@ -1,0 +1,163 @@
+// Theme-specific overrides
+// Special styling for light theme elements
+
+// Light theme header adjustments
+body.theme-light {
+  // Header with blue background
+  .site-header {
+    --color-foreground: #ffffff; // White text in header
+    --color-muted: rgba(255, 255, 255, 0.8); // White muted text
+    --color-text-heading: #ffffff; // White headings in header
+    --color-border-ui: rgba(255, 255, 255, 0.2); // White borders
+    
+    // Make sure all text in header is white
+    .site-title a,
+    .site-description,
+    .mobile-menu-toggle {
+      color: #ffffff;
+    }
+    
+    // Search trigger adjustments
+    .search-trigger {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.9);
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: #ffffff;
+        
+        svg {
+          color: #ffffff;
+        }
+      }
+      
+      .search-trigger-shortcut {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+      }
+    }
+  }
+  
+  // Active/current page highlighting with strong blue
+  .current-page > .page-item-wrapper {
+    background-color: #4E6FC3;
+    
+    .page-link {
+      color: #ffffff;
+      font-weight: 600;
+      
+      &:hover {
+        color: #ffffff; // Keep white on hover when active
+      }
+    }
+  }
+  
+  // Table of contents active item
+  .docs-toc__link.is-active {
+    background-color: #4E6FC3;
+    color: #ffffff;
+    border-left-color: #4660a5;
+    
+    &:hover {
+      color: #ffffff; // Keep white on hover
+    }
+  }
+  
+  // Reading time badge styling
+  .docs-reading-time-badge {
+    background: #4E6FC3;
+    color: #ffffff;
+    border-right-color: #4660a5;
+  }
+  
+  // Blockquotes - only change text color, keep original backgrounds
+  .entry-content blockquote,
+  blockquote {
+    color: #4f69a5 !important; // Strong blue text for info/default blockquotes
+    
+    // Also apply to nested elements
+    p, span, strong, em {
+      color: inherit !important;
+    }
+  }
+  
+  // Specific blockquote types with appropriate text colors
+  .blockquote-warning,
+  .wp-block-quote.is-style-warning,
+  blockquote.warning {
+    color: #b87620 !important; // Dark orange for warning
+    
+    p, span, strong, em {
+      color: inherit !important;
+    }
+  }
+  
+  .blockquote-danger,
+  .blockquote-error,
+  .wp-block-quote.is-style-danger,
+  .wp-block-quote.is-style-error,
+  blockquote.danger,
+  blockquote.error {
+    color: #a03030 !important; // Dark red for danger/error
+    
+    p, span, strong, em {
+      color: inherit !important;
+    }
+  }
+  
+  .blockquote-success,
+  .wp-block-quote.is-style-success,
+  blockquote.success {
+    color: #2d7c58 !important; // Dark green for success
+    
+    p, span, strong, em {
+      color: inherit !important;
+    }
+  }
+  
+  // Code blocks
+  code {
+    background-color: rgba(78, 111, 195, 0.1);
+    color: #4E6FC3;
+  }
+  
+  // Search modal adjustments for selected items
+  .docs-search-result.is-selected {
+    box-shadow: 0 0 0 2px rgba(78, 111, 195, 0.3);
+  }
+  
+  // Content link hover color
+  .entry-content a:hover {
+    border-bottom-color: rgba(153, 104, 197, 0.5);
+  }
+  
+  // Alert/message boxes with strong text colors
+  .alert-success, .notice-success, .message-success {
+    color: #2d7c58; // Dark green for readability on light green
+  }
+  
+  .alert-error, .notice-error, .message-error {
+    color: #a03030; // Dark red for readability on light red
+  }
+  
+  .alert-warning, .notice-warning, .message-warning {
+    color: #b87620; // Dark orange for readability on light yellow
+  }
+  
+  .alert-info, .notice-info, .message-info {
+    color: #4f69a5; // Dark blue for readability on light blue
+  }
+  
+  // WordPress block editor notices
+  .wp-block-group.is-style-info,
+  .wp-block-group.is-style-success,
+  .wp-block-group.is-style-warning,
+  .wp-block-group.is-style-error {
+    &.has-background {
+      color: inherit; // Use the strong colors defined above
+    }
+  }
+}

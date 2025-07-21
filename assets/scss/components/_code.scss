@@ -27,14 +27,14 @@
 // Custom token colors to match our theme
 .hljs-comment,
 .hljs-quote {
-  color: #7c8a99;
+  color: var(--color-code-comment);
   font-style: italic;
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-addition {
-  color: #c792ea;
+  color: var(--color-code-keyword);
 }
 
 .hljs-number,
@@ -43,7 +43,7 @@
 .hljs-literal,
 .hljs-doctag,
 .hljs-regexp {
-  color: #a3d5a3;
+  color: var(--color-code-string);
 }
 
 .hljs-title,
@@ -51,7 +51,7 @@
 .hljs-name,
 .hljs-selector-id,
 .hljs-selector-class {
-  color: #82aaff;
+  color: var(--color-code-function);
 }
 
 .hljs-attribute,
@@ -60,7 +60,7 @@
 .hljs-template-variable,
 .hljs-class .hljs-title,
 .hljs-type {
-  color: #ffcb8b;
+  color: var(--color-code-variable);
 }
 
 .hljs-symbol,
@@ -68,16 +68,16 @@
 .hljs-subst,
 .hljs-meta,
 .hljs-link {
-  color: #f78c6c;
+  color: var(--color-code-number);
 }
 
 .hljs-built_in,
 .hljs-builtin-name {
-  color: #89ddff;
+  color: var(--color-code-operator);
 }
 
 .hljs-deletion {
-  color: #ff5370;
+  color: var(--color-code-error);
 }
 
 .hljs-emphasis {

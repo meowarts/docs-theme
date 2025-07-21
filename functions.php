@@ -92,13 +92,8 @@ function enqueue_scripts() {
 		'nonce' => wp_create_nonce( 'wp_rest' ),
 	) );
 	
-	// Highlight.js for syntax highlighting
-	wp_enqueue_style(
-		'highlight-css',
-		'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css',
-		array(),
-		'11.9.0'
-	);
+	// Highlight.js for syntax highlighting - use our theme colors instead
+	// We'll handle syntax highlighting colors through our CSS variables
 	
 	wp_enqueue_script(
 		'highlight-core',
@@ -324,3 +319,14 @@ function content_has_headings( $content ) {
 	// Check for h2, h3, or h4 tags in the content
 	return preg_match( '/<h[2-4][^>]*>.*?<\/h[2-4]>/i', $content );
 }
+
+/**
+ * Add theme color scheme class to body
+ */
+function add_color_scheme_body_class( $classes ) {
+	// Get the color scheme setting directly
+	$color_scheme = get_option( 'docs_theme_color_scheme', 'dark' );
+	$classes[] = 'theme-' . $color_scheme;
+	return $classes;
+}
+add_filter( 'body_class', __NAMESPACE__ . '\\add_color_scheme_body_class' );

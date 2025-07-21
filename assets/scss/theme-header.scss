@@ -19,6 +19,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 
 // Import all styles
 @import 'variables';
+@import 'theme-colors';
 @import 'mixins';
 
 // Base styles
@@ -37,6 +38,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 @import 'components/breadcrumbs';
 @import 'components/page-meta';
 @import 'components/search-modal';
+@import 'components/theme-overrides';
 
 // Utilities
 @import 'utilities/helpers';

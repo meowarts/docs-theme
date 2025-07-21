@@ -29,7 +29,7 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   border-radius: 20px 0 0 20px; // Rounded left side only
-  border-right: 1px solid #4fb9ec29; // Separator border with specific blue color
+  border-right: 1px solid var(--color-accent-bg); // Separator border
   
   svg {
     width: 12px;
@@ -44,7 +44,7 @@
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-badge-bg);
   color: var(--color-muted);
   font-size: var(--font-size-xs);
   font-weight: 500;
@@ -58,13 +58,13 @@
   
   // Color variations based on age
   &.last-updated--green {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+    background: var(--color-success-bg);
+    color: var(--color-success);
   }
   
   &.last-updated--red {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: var(--color-error-bg);
+    color: var(--color-error);
   }
 }
 

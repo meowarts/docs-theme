@@ -33,6 +33,7 @@ function docs_theme_register_settings() {
     register_setting('docs_theme_settings', 'docs_theme_show_breadcrumbs');
     register_setting('docs_theme_settings', 'docs_theme_show_last_updated');
     register_setting('docs_theme_settings', 'docs_theme_show_reading_time');
+    register_setting('docs_theme_settings', 'docs_theme_color_scheme');
     // Register sidebar button sections
     register_setting('docs_theme_settings', 'docs_theme_sidebar_button_sections');
     
@@ -72,6 +73,14 @@ function docs_theme_register_settings() {
         'docs_theme_show_reading_time',
         __('Show Reading Time', 'docs-theme'),
         'docs_theme_reading_time_callback',
+        'docs_theme_settings',
+        'docs_theme_display_section'
+    );
+    
+    add_settings_field(
+        'docs_theme_color_scheme',
+        __('Color Scheme', 'docs-theme'),
+        'docs_theme_color_scheme_callback',
         'docs_theme_settings',
         'docs_theme_display_section'
     );
@@ -131,6 +140,17 @@ function docs_theme_reading_time_callback() {
     <?php
 }
 
+function docs_theme_color_scheme_callback() {
+    $value = get_option('docs_theme_color_scheme', 'dark');
+    ?>
+    <select name="docs_theme_color_scheme" id="docs_theme_color_scheme">
+        <option value="dark" <?php selected($value, 'dark'); ?>><?php _e('Dark', 'docs-theme'); ?></option>
+        <option value="light" <?php selected($value, 'light'); ?>><?php _e('Light', 'docs-theme'); ?></option>
+    </select>
+    <p class="description"><?php _e('Choose between dark and light color schemes for your documentation.', 'docs-theme'); ?></p>
+    <?php
+}
+
 /**
  * Settings page HTML
  */
@@ -182,6 +202,10 @@ function docs_theme_show_last_updated() {
 
 function docs_theme_show_reading_time() {
     return get_option('docs_theme_show_reading_time', '1') === '1';
+}
+
+function docs_theme_get_color_scheme() {
+    return get_option('docs_theme_color_scheme', 'dark');
 }
 
 // Sidebar button sections callback

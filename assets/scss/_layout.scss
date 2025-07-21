@@ -14,7 +14,7 @@
   left: 0;
   right: 0;
   z-index: var(--z-index-sticky);
-  background-color: var(--color-background);
+  background-color: var(--color-header-bg);
   border-bottom: 1px solid var(--color-border-ui);
   padding: var(--spacing-md) 0;
   
@@ -160,6 +160,7 @@ body.admin-bar {
   padding: 30px var(--sidebar-padding-horizontal) 0;
   font-family: var(--font-family-sidebar);
   border-right: 1px solid var(--color-border-ui);
+  background-color: var(--color-sidebar-bg);
   
   // Add padding to inner content instead
   .sidebar-pages-navigation {
@@ -171,6 +172,7 @@ body.admin-bar {
 .docs-sidebar-right {
   padding: 30px var(--sidebar-padding-horizontal) var(--spacing-2xl);
   border-left: 1px solid var(--color-border-ui);
+  background-color: var(--color-sidebar-bg);
 }
 
 // Main content

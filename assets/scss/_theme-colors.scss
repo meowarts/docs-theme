@@ -1,0 +1,257 @@
+// Theme Color Schemes
+// This file defines color variables for different themes
+
+// Default dark theme (existing colors)
+body.theme-dark {
+  --color-background: #0f172a;
+  --color-foreground: #cad3df;
+  --color-muted: #94a3b8;
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: rgba(78, 185, 236, 1);
+  --color-accent-bg: rgba(78, 185, 236, 0.1);
+  --color-hover: #334155;
+  --color-border-ui: rgba(255, 255, 255, 0.1);
+  --color-code-bg: #1e293b;
+  --color-widget-bg: #1e293b;
+  --color-border: #e5e7eb;
+  --color-bold-accent: #92a2ff;
+  
+  // Additional dark theme specific colors
+  --color-link: #60a5fa;
+  --color-link-hover: #93c5fd;
+  --color-text-heading: #f1f5f9;
+  --color-sidebar-bg: rgba(15, 23, 42, 0.95);
+  --color-header-bg: rgba(15, 23, 42, 0.95);
+  --color-toc-link: #cbd5e1;
+  --color-toc-link-active: #60a5fa;
+  --color-search-bg: #1e293b;
+  --color-search-border: rgba(255, 255, 255, 0.1);
+  --color-search-text: #e2e8f0;
+  --color-code-text: #e2e8f0;
+  --color-code-border: rgba(255, 255, 255, 0.05);
+  --color-table-border: #334155;
+  --color-table-header-bg: #1e293b;
+  --color-blockquote-border: #3b82f6;
+  --color-button-bg: #2563eb;
+  --color-button-text: #ffffff;
+  --color-button-hover-bg: #1d4ed8;
+  --color-badge-bg: rgba(59, 130, 246, 0.1);
+  --color-badge-text: #60a5fa;
+  --color-scrollbar-track: #1e293b;
+  --color-scrollbar-thumb: #475569;
+  --color-scrollbar-thumb-hover: #64748b;
+  
+  // Additional colors for components
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-error: #ef4444;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-info: #3b82f6;
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  
+  // Code syntax highlighting (dark theme)
+  --color-code-comment: #7c8a99;
+  --color-code-keyword: #c792ea;
+  --color-code-string: #a3d5a3;
+  --color-code-function: #82aaff;
+  --color-code-variable: #ffcb8b;
+  --color-code-number: #f78c6c;
+  --color-code-operator: #89ddff;
+  --color-code-error: #ff5370;
+  
+  // Search modal specific
+  --color-modal-overlay: rgba(0, 0, 0, 0.8);
+  --color-modal-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  // Table striping
+  --color-table-stripe: rgba(255, 255, 255, 0.02);
+  --color-table-hover: rgba(255, 255, 255, 0.04);
+  
+  // Content link color
+  --color-content-link: #c57ce8;
+  --color-content-link-border: rgba(197, 125, 232, 0.25);
+  
+  // Special buttons
+  --color-button-green: #22c55e;
+  --color-button-green-bg: rgba(34, 197, 94, 0.05);
+  --color-button-green-border: rgba(34, 197, 94, 0.6);
+  --color-button-green-hover: #16a34a;
+  --color-button-purple: #a855f7;
+  --color-button-purple-bg: rgba(168, 85, 247, 0.05);
+  --color-button-purple-border: rgba(168, 85, 247, 0.6);
+  --color-button-purple-hover: #7c3aed;
+}
+
+// Light theme colors with Meow Apps brand colors
+body.theme-light {
+  --color-background: #ffffff;
+  --color-foreground: #382525; // Your black
+  --color-muted: #6b7280;
+  --color-primary: #4E6FC3; // Your blue
+  --color-secondary: #4660a5; // Your deepblue
+  --color-accent: #4660a5; // Your deepblue for hover states
+  --color-accent-bg: #4E6FC3; // Strong blue background for accent areas
+  --color-hover: #f5f7fb;
+  --color-border-ui: rgba(56, 37, 37, 0.1); // Your black with transparency
+  --color-code-bg: #fafbfc;
+  --color-widget-bg: #f8f9fb;
+  --color-border: #e5e7eb;
+  --color-bold-accent: #4E6FC3; // Your blue
+  
+  // Additional light theme specific colors
+  --color-link: #4E6FC3; // Your blue
+  --color-link-hover: #4660a5; // Your deepblue
+  --color-text-heading: #382525; // Your black
+  --color-sidebar-bg: #f6f8ff;
+  --color-header-bg: #4E6FC3; // Your blue for header background
+  --color-toc-link: #6b7280;
+  --color-toc-link-active: #4E6FC3; // Your blue
+  --color-search-bg: rgba(255, 255, 255, 0.9); // White search box on blue header
+  --color-search-border: rgba(255, 255, 255, 0.3);
+  --color-search-text: #382525; // Your black
+  --color-code-text: #382525; // Your black
+  --color-code-border: rgba(56, 37, 37, 0.05);
+  --color-table-border: #e5e7eb;
+  --color-table-header-bg: #f8f9fb;
+  --color-blockquote-border: #4E6FC3; // Your blue
+  --color-blockquote-text: #4f69a5; // Strong blue for blockquote text
+  --color-button-bg: #4E6FC3; // Your blue
+  --color-button-text: #ffffff;
+  --color-button-hover-bg: #4660a5; // Your deepblue
+  --color-badge-bg: #4E6FC3; // Strong blue background for badges
+  --color-badge-text: #ffffff; // White text on badges
+  --color-scrollbar-track: #f3f4f6;
+  --color-scrollbar-thumb: #c3c5c7; // Your gray
+  --color-scrollbar-thumb-hover: #9ca3af;
+  
+  // Additional colors for components using your brand colors
+  --color-success: #ffffff; // White text on green
+  --color-success-bg: #3ba16d; // Your green as background
+  --color-error: #ffffff; // White text on red
+  --color-error-bg: #db4141; // Your red as background
+  --color-warning: #ffffff; // White text on yellow
+  --color-warning-bg: #f39d30; // Your yellow as background
+  --color-info: #ffffff; // White text on blue
+  --color-info-bg: #4E6FC3; // Your blue as background
+  
+  // Code syntax highlighting (light theme) with your colors
+  --color-code-comment: #6b7280;
+  --color-code-keyword: #9968c5; // Your purple
+  --color-code-string: #3ba16d; // Your green
+  --color-code-function: #4E6FC3; // Your blue
+  --color-code-variable: #f39d30; // Your yellow
+  --color-code-number: #db4141; // Your red
+  --color-code-operator: #4660a5; // Your deepblue
+  --color-code-error: #db4141; // Your red
+  
+  // Search modal specific
+  --color-modal-overlay: rgba(56, 37, 37, 0.5); // Your black overlay
+  --color-modal-shadow: 0 20px 25px -5px rgba(56, 37, 37, 0.1), 0 10px 10px -5px rgba(56, 37, 37, 0.04);
+  
+  // Table striping
+  --color-table-stripe: rgba(78, 111, 195, 0.02); // Subtle blue stripe
+  --color-table-hover: rgba(78, 111, 195, 0.04);
+  
+  // Content link color
+  --color-content-link: #9968c5; // Your purple for content links
+  --color-content-link-border: rgba(153, 104, 197, 0.25);
+  
+  // Special buttons using your colors
+  --color-button-green: #3ba16d; // Your green
+  --color-button-green-bg: rgba(59, 161, 109, 0.05);
+  --color-button-green-border: rgba(59, 161, 109, 0.6);
+  --color-button-green-hover: #2f8156;
+  --color-button-purple: #9968c5; // Your purple
+  --color-button-purple-bg: rgba(153, 104, 197, 0.05);
+  --color-button-purple-border: rgba(153, 104, 197, 0.6);
+  --color-button-purple-hover: #7d51a6;
+}
+
+// For backwards compatibility, keep the root variables as dark theme default
+// This ensures the theme works even if the body class is not applied
+:root {
+  // Use dark theme colors as default
+  --color-background: #0f172a;
+  --color-foreground: #cad3df;
+  --color-muted: #94a3b8;
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: rgba(78, 185, 236, 1);
+  --color-accent-bg: rgba(78, 185, 236, 0.1);
+  --color-hover: #334155;
+  --color-border-ui: rgba(255, 255, 255, 0.1);
+  --color-code-bg: #1e293b;
+  --color-widget-bg: #1e293b;
+  --color-border: #e5e7eb;
+  --color-bold-accent: #92a2ff;
+  
+  // Additional default colors
+  --color-link: #60a5fa;
+  --color-link-hover: #93c5fd;
+  --color-text-heading: #f1f5f9;
+  --color-sidebar-bg: rgba(15, 23, 42, 0.95);
+  --color-header-bg: rgba(15, 23, 42, 0.95);
+  --color-toc-link: #cbd5e1;
+  --color-toc-link-active: #60a5fa;
+  --color-search-bg: #1e293b;
+  --color-search-border: rgba(255, 255, 255, 0.1);
+  --color-search-text: #e2e8f0;
+  --color-code-text: #e2e8f0;
+  --color-code-border: rgba(255, 255, 255, 0.05);
+  --color-table-border: #334155;
+  --color-table-header-bg: #1e293b;
+  --color-blockquote-border: #3b82f6;
+  --color-button-bg: #2563eb;
+  --color-button-text: #ffffff;
+  --color-button-hover-bg: #1d4ed8;
+  --color-badge-bg: rgba(59, 130, 246, 0.1);
+  --color-badge-text: #60a5fa;
+  --color-scrollbar-track: #1e293b;
+  --color-scrollbar-thumb: #475569;
+  --color-scrollbar-thumb-hover: #64748b;
+  
+  // Component colors
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-error: #ef4444;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-info: #3b82f6;
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  
+  // Code syntax (dark defaults)
+  --color-code-comment: #7c8a99;
+  --color-code-keyword: #c792ea;
+  --color-code-string: #a3d5a3;
+  --color-code-function: #82aaff;
+  --color-code-variable: #ffcb8b;
+  --color-code-number: #f78c6c;
+  --color-code-operator: #89ddff;
+  --color-code-error: #ff5370;
+  
+  // Modals and shadows
+  --color-modal-overlay: rgba(0, 0, 0, 0.8);
+  --color-modal-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  // Tables
+  --color-table-stripe: rgba(255, 255, 255, 0.02);
+  --color-table-hover: rgba(255, 255, 255, 0.04);
+  
+  // Content links
+  --color-content-link: #c57ce8;
+  --color-content-link-border: rgba(197, 125, 232, 0.25);
+  
+  // Special buttons
+  --color-button-green: #22c55e;
+  --color-button-green-bg: rgba(34, 197, 94, 0.05);
+  --color-button-green-border: rgba(34, 197, 94, 0.6);
+  --color-button-green-hover: #16a34a;
+  --color-button-purple: #a855f7;
+  --color-button-purple-bg: rgba(168, 85, 247, 0.05);
+  --color-button-purple-border: rgba(168, 85, 247, 0.6);
+  --color-button-purple-hover: #7c3aed;
+}
