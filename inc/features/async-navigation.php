@@ -353,6 +353,11 @@ add_filter('the_content', 'docs_theme_add_link_attributes', 20);
  * Enqueue async navigation script
  */
 function docs_theme_enqueue_async_navigation() {
+    // Only enqueue if Single Page App mode is enabled
+    if (!function_exists('docs_theme_is_single_page_app') || !docs_theme_is_single_page_app()) {
+        return;
+    }
+    
     wp_enqueue_script(
         'docs-theme-async-navigation',
         get_template_directory_uri() . '/assets/js/async-navigation.js',

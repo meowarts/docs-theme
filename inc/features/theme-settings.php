@@ -34,6 +34,7 @@ function docs_theme_register_settings() {
     register_setting('docs_theme_settings', 'docs_theme_show_last_updated');
     register_setting('docs_theme_settings', 'docs_theme_show_reading_time');
     register_setting('docs_theme_settings', 'docs_theme_color_scheme');
+    register_setting('docs_theme_settings', 'docs_theme_single_page_app');
     // Register sidebar button sections
     register_setting('docs_theme_settings', 'docs_theme_sidebar_button_sections');
     
@@ -81,6 +82,14 @@ function docs_theme_register_settings() {
         'docs_theme_color_scheme',
         __('Color Scheme', 'docs-theme'),
         'docs_theme_color_scheme_callback',
+        'docs_theme_settings',
+        'docs_theme_display_section'
+    );
+    
+    add_settings_field(
+        'docs_theme_single_page_app',
+        __('Single Page App', 'docs-theme'),
+        'docs_theme_single_page_app_callback',
         'docs_theme_settings',
         'docs_theme_display_section'
     );
@@ -151,6 +160,17 @@ function docs_theme_color_scheme_callback() {
     <?php
 }
 
+function docs_theme_single_page_app_callback() {
+    $value = get_option('docs_theme_single_page_app', '1');
+    ?>
+    <label>
+        <input type="checkbox" name="docs_theme_single_page_app" value="1" <?php checked($value, '1'); ?> />
+        <?php _e('Enable Single Page App mode for faster navigation', 'docs-theme'); ?>
+    </label>
+    <p class="description"><?php _e('When enabled, pages load dynamically without full page refreshes. Disable for traditional navigation.', 'docs-theme'); ?></p>
+    <?php
+}
+
 /**
  * Settings page HTML
  */
@@ -206,6 +226,10 @@ function docs_theme_show_reading_time() {
 
 function docs_theme_get_color_scheme() {
     return get_option('docs_theme_color_scheme', 'dark');
+}
+
+function docs_theme_is_single_page_app() {
+    return get_option('docs_theme_single_page_app', '1') === '1';
 }
 
 // Sidebar button sections callback
