@@ -169,31 +169,11 @@
 		});
 	}
 
-	/**
-	 * Initialize parent page click handlers
-	 */
-	function initParentPageHandlers() {
-		// Make parent page text clickable to toggle submenu
-		const parentPages = document.querySelectorAll('.page-parent');
-		parentPages.forEach(function(parentSpan) {
-			// Skip if already initialized
-			if (parentSpan.hasAttribute('data-initialized')) {
-				return;
-			}
-			
-			// Mark as initialized
-			parentSpan.setAttribute('data-initialized', 'true');
-			
-			parentSpan.addEventListener('click', function(e) {
-				e.preventDefault();
-				const pageItem = parentSpan.closest('.page-item');
-				const toggleButton = pageItem.querySelector('.toggle-children');
-				if (toggleButton) {
-					toggleButton.click();
-				}
-			});
-		});
-	}
+		/**
+		 * Initialize parent page click handlers
+		 * (No-op: parent titles are links; caret toggles children)
+		 */
+		function initParentPageHandlers() {}
 
 	/**
 	 * Make sidebar page hierarchy collapsible
@@ -248,12 +228,7 @@
 			newButton.removeAttribute('data-initialized');
 			button.parentNode.replaceChild(newButton, button);
 		});
-		
-		document.querySelectorAll('.page-parent').forEach(function(span) {
-			const newSpan = span.cloneNode(true);
-			newSpan.removeAttribute('data-initialized');
-			span.parentNode.replaceChild(newSpan, span);
-		});
+		// Parent links are normal anchors; no special handlers
 		
 		// Now reinitialize all handlers
 		const toggleButtons = document.querySelectorAll('.toggle-children');
@@ -281,20 +256,7 @@
 			});
 		});
 		
-		// Reinitialize parent page handlers
-		const parentPages = document.querySelectorAll('.page-parent');
-		parentPages.forEach(function(parentSpan) {
-			parentSpan.setAttribute('data-initialized', 'true');
-			
-			parentSpan.addEventListener('click', function(e) {
-				e.preventDefault();
-				const pageItem = parentSpan.closest('.page-item');
-				const toggleButton = pageItem.querySelector('.toggle-children');
-				if (toggleButton) {
-					toggleButton.click();
-				}
-			});
-		});
+		// Parent links navigate; only toggles control expansion
 	}
 
 	// Store the current observer so we can disconnect it when needed

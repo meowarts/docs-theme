@@ -124,11 +124,17 @@ function docs_theme_get_page_content($request) {
     
     // Get badges (reading time and last updated)
     $badges_html = '';
-    $child_pages = get_pages(array(
-        'parent' => $page_id,
-        'post_status' => 'publish',
-        'number' => 1, // Just check if any exist
-    ));
+    // Respect same query customization hook as server-rendered template
+    $child_check_args = apply_filters(
+        'docs_theme_child_pages_query',
+        array(
+            'parent' => $page_id,
+            'post_status' => 'publish',
+            'number' => 1, // Just check if any exist
+        ),
+        $page_id
+    );
+    $child_pages = get_pages($child_check_args);
     
     if (empty($child_pages)) {
         ob_start();
@@ -176,12 +182,19 @@ function docs_theme_get_page_content($request) {
     
     // Get child pages if any
     $child_pages_html = '';
-    $full_child_pages = get_pages(array(
-        'parent' => $page_id,
-        'sort_column' => 'menu_order,post_title',
-        'sort_order' => 'ASC',
-        'post_status' => 'publish',
-    ));
+    // Match server-side child pages query (and allow external overrides)
+    $child_query_args = apply_filters(
+        'docs_theme_child_pages_query',
+        array(
+            'parent' => $page_id,
+            'sort_column' => 'menu_order,post_title',
+            'sort_order' => 'ASC',
+            'post_status' => 'publish',
+            'number' => 0,
+        ),
+        $page_id
+    );
+    $full_child_pages = get_pages($child_query_args);
     
     if (!empty($full_child_pages)) {
         ob_start();

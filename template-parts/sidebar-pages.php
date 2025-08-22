@@ -62,8 +62,8 @@ function render_page_tree( $pages, $parent_id = 0, $current_page_id = 0 ) {
 			$output .= '<div class="page-item-wrapper">';
 			
 			if ( $has_children ) {
-				// For parent pages with children, make the text clickable but not a link
-				$output .= '<span class="page-link page-parent" data-page-id="' . esc_attr( $page->ID ) . '">' . esc_html( $page->post_title ) . '</span>';
+				// For parent pages with children, render as a normal link and keep a separate toggle
+				$output .= '<a href="' . get_permalink( $page->ID ) . '" class="page-link page-parent" data-page-id="' . esc_attr( $page->ID ) . '">' . esc_html( $page->post_title ) . '</a>';
 				$output .= '<button class="toggle-children" aria-expanded="' . ( $is_active ? 'true' : 'false' ) . '">';
 				$output .= '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none"/></svg>';
 				$output .= '</button>';

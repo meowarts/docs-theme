@@ -252,7 +252,7 @@
         const titleEl = document.querySelector(config.titleSelector);
         const subtitleEl = document.querySelector(config.subtitleSelector);
         const breadcrumbsContainer = document.querySelector(config.breadcrumbsSelector);
-        const badgesContainer = document.querySelector('.docs-breadcrumbs-wrapper');
+        let badgesContainer = document.querySelector('.docs-breadcrumbs-wrapper');
         const tocContainer = document.querySelector(config.tocSelector);
 
         // Fade out current content
@@ -324,6 +324,18 @@
         }
 
         // Update badges
+        if (data.badges_html) {
+            // Ensure a wrapper exists to host badges when breadcrumbs are disabled
+            if (!badgesContainer) {
+                const article = document.querySelector('article');
+                if (article) {
+                    badgesContainer = document.createElement('div');
+                    badgesContainer.className = 'docs-breadcrumbs-wrapper';
+                    article.insertBefore(badgesContainer, article.firstChild);
+                }
+            }
+        }
+
         if (badgesContainer) {
             const existingBadges = badgesContainer.querySelector('.docs-badges-wrapper');
             if (data.badges_html) {

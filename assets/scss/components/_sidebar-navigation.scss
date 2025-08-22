@@ -73,28 +73,7 @@
 }
 
 // Parent pages that are not links
-.page-parent {
-  flex: 1;
-  display: block;
-  padding: var(--spacing-xs) 0;
-  color: var(--color-foreground);
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  user-select: none;
-  transition: color $transition-fast;
-  
-  &:hover {
-    color: var(--color-accent);
-  }
-  
-  // Keep hover state even when parent is active/expanded
-  .active-parent > .page-item-wrapper > & {
-    &:hover {
-      color: var(--color-accent);
-    }
-  }
-}
+// .page-parent previously styled non-link parents; now redundant.
 
 .toggle-children {
   @include button-reset;

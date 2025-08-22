@@ -29,18 +29,24 @@ get_header(); ?>
 		), get_the_ID() ) );
 		?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+			<?php 
+			// Compute visibility for breadcrumbs and badges
+			$show_breadcrumbs = function_exists( 'docs_theme_show_breadcrumbs' ) ? docs_theme_show_breadcrumbs() : true;
+			$show_badges = empty( $child_pages ) && (
+				( function_exists( 'docs_theme_show_reading_time' ) && docs_theme_show_reading_time() ) ||
+				( function_exists( 'docs_theme_show_last_updated' ) && docs_theme_show_last_updated() )
+			);
+			?>
+
+			<?php if ( $show_breadcrumbs || $show_badges ) : ?>
 			<div class="docs-breadcrumbs-wrapper">
 				<?php 
-				// Display breadcrumbs
-				if ( function_exists( 'docs_theme_display_breadcrumbs' ) ) {
+				// Display breadcrumbs when enabled
+				if ( $show_breadcrumbs && function_exists( 'docs_theme_display_breadcrumbs' ) ) {
 					docs_theme_display_breadcrumbs();
 				}
 				?>
-				
-				<?php if ( empty( $child_pages ) && ( 
-					( function_exists( 'docs_theme_show_reading_time' ) && docs_theme_show_reading_time() ) ||
-					( function_exists( 'docs_theme_show_last_updated' ) && docs_theme_show_last_updated() )
-				) ) : ?>
+				<?php if ( $show_badges ) : ?>
 					<div class="docs-badges-wrapper">
 						<?php
 						// Display reading time as a badge
@@ -54,7 +60,7 @@ get_header(); ?>
 								</svg>
 								<?php printf(esc_html__('%d min read', 'docs-theme'), $reading_time); ?>
 							</span>
-						<?php } ?>
+					<?php } ?>
 						<?php
 						// Display last updated date as a badge
 						if ( function_exists( 'docs_theme_show_last_updated' ) && docs_theme_show_last_updated() ) {
@@ -72,6 +78,7 @@ get_header(); ?>
 					</div>
 				<?php endif; ?>
 			</div>
+			<?php endif; ?>
 			
 			<header class="entry-header">
 				<h1 class="entry-title" id="page-title">
@@ -120,7 +127,7 @@ get_header(); ?>
 									'post_status' => 'publish',
 								) ) );
 								?>
-								<a href="<?php echo esc_url( get_permalink( $child_page->ID ) ); ?>" class="docs-page-card">
+								<a href="<?php echo esc_url( get_permalink( $child_page->ID ) ); ?>" class="docs-page-card" data-page-id="<?php echo esc_attr( $child_page->ID ); ?>">
 									<div class="docs-page-card-content">
 										<h3 class="docs-page-card-title">
 											<?php if ( ! empty( $emoticon ) ) : ?>
