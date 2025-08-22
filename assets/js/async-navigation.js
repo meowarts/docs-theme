@@ -151,6 +151,16 @@
                 // Add new breadcrumbs if we have target data
                 if (targetBreadcrumbs) {
                     await animateBreadcrumbAddition(targetBreadcrumbs);
+                    // Replace with server-rendered breadcrumbs (with real links)
+                    const wrapper = document.querySelector('.docs-breadcrumbs-wrapper');
+                    if (wrapper && data.breadcrumbs_html) {
+                        const existing = wrapper.querySelector('.docs-breadcrumbs');
+                        if (existing) {
+                            existing.outerHTML = data.breadcrumbs_html;
+                        } else {
+                            wrapper.insertAdjacentHTML('afterbegin', data.breadcrumbs_html);
+                        }
+                    }
                 } else if (breadcrumbData) {
                     // Fallback to normal breadcrumb animation
                     setTimeout(() => {
@@ -207,6 +217,16 @@
                 // Add new breadcrumbs if we have target data
                 if (targetBreadcrumbs) {
                     await animateBreadcrumbAddition(targetBreadcrumbs);
+                    // Replace with server-rendered breadcrumbs (with real links)
+                    const wrapper = document.querySelector('.docs-breadcrumbs-wrapper');
+                    if (wrapper && data.breadcrumbs_html) {
+                        const existing = wrapper.querySelector('.docs-breadcrumbs');
+                        if (existing) {
+                            existing.outerHTML = data.breadcrumbs_html;
+                        } else {
+                            wrapper.insertAdjacentHTML('afterbegin', data.breadcrumbs_html);
+                        }
+                    }
                 } else if (breadcrumbData) {
                     // Fallback to normal breadcrumb animation
                     setTimeout(() => {
