@@ -52,6 +52,17 @@ function updateVersion(newVersion) {
     );
     fs.writeFileSync(themeHeaderPath, updatedThemeHeader);
     
+    // Update style.css (WordPress reads version from here)
+    const styleCssPath = path.join(__dirname, 'style.css');
+    if (fs.existsSync(styleCssPath)) {
+        const styleCssContent = fs.readFileSync(styleCssPath, 'utf8');
+        const updatedStyleCss = styleCssContent.replace(
+            /Version:\s*[\d.]+/,
+            `Version: ${newVersion}`
+        );
+        fs.writeFileSync(styleCssPath, updatedStyleCss);
+    }
+    
     // Update package.json
     const packagePath = path.join(__dirname, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
